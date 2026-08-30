@@ -19,6 +19,8 @@ class DLab_Activator {
         DLab_Post_Types::seed_default_terms();
 
         DLab_Settings::ensure_defaults();
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-db.php';
+        DLab_DB::create_tables();
         self::create_pages();
 
         flush_rewrite_rules();
@@ -35,6 +37,11 @@ class DLab_Activator {
                 'title'   => __('Design Lab', 'design-lab'),
                 'slug'    => 'design-lab',
                 'content' => '[dlab_workshops_list show_filters="true" filter_action="/design-lab/"]',
+            ),
+            'pass' => array(
+                'title'   => __('Pass', 'design-lab'),
+                'slug'    => 'pass',
+                'content' => '[dlab_pass]',
             ),
         );
 
@@ -64,19 +71,28 @@ class DLab_Activator {
 
         update_option('dlab_page_ids', $page_ids);
 
-        if (!empty($page_ids['listing'])) {
+        if (!empty($page_ids['listing']) && !(int) get_option('dlab_listing_page', 0)) {
             update_option('dlab_listing_page', (int) $page_ids['listing']);
+        }
+        if (!empty($page_ids['pass']) && !(int) get_option('dlab_pass_page', 0)) {
+            update_option('dlab_pass_page', (int) $page_ids['pass']);
         }
     }
 
     /**
-     * Ensure listing page exists (upgrade without re-activation).
+     * Ensure front-end pages exist (upgrade without re-activation).
      */
     public static function maybe_create_pages() {
         $ids = get_option('dlab_page_ids', array());
-        if (!is_array($ids) || empty($ids['listing']) || !get_post($ids['listing'])) {
-            self::create_pages();
-            flush_rewrite_rules();
+        if (!is_array($ids)) {
+            $ids = array();
+        }
+        foreach (array('listing', 'pass') as $key) {
+            if (empty($ids[$key]) || !get_post($ids[$key])) {
+                self::create_pages();
+                flush_rewrite_rules();
+                return;
+            }
         }
     }
 }

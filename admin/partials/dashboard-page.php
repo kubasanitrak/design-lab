@@ -27,6 +27,6 @@ if (!defined('ABSPATH')) {
     </p>
 
     <p class="description">
-        <?php esc_html_e('Rezervace, košík a platby přijdou v dalších fázích. Teď lze zakládat workshopy a vkládat shortcody na stránky.', 'design-lab'); ?>
+        <?php esc_html_e('Pass (košík) je aktivní. Registrace, platba a faktury přijdou v dalších fázích.', 'design-lab'); ?>
     </p>
 </div>

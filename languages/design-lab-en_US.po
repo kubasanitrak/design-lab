@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Design Lab package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Design Lab 0.1.0\n"
+"Project-Id-Version: Design Lab 0.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/kubasanitrak/design-lab/issues\n"
 "POT-Creation-Date: 2026-08-30 17:00+0200\n"
 "PO-Revision-Date: 2026-08-30 17:00+0200\n"
@@ -197,8 +197,8 @@ msgstr "Page with the [dlab_workshops_list] shortcode, usually /design-lab/."
 msgid "Publikované workshopy"
 msgstr "Published workshops"
 
-msgid "Rezervace, košík a platby přijdou v dalších fázích. Teď lze zakládat workshopy a vkládat shortcody na stránky."
-msgstr "Bookings, basket and payments come in later phases. You can create workshops and place shortcodes now."
+msgid "Pass (košík) je aktivní. Registrace, platba a faktury přijdou v dalších fázích."
+msgstr "The pass (basket) is live. Registration, payment and invoices come in later phases."
 
 msgid "Nemáte oprávnění k tomuto přehledu."
 msgstr "You do not have permission to view this overview."
@@ -206,10 +206,93 @@ msgstr "You do not have permission to view this overview."
 msgid "ACF Pro není aktivní — synchronizujte field groups z acf-json/."
 msgstr "ACF Pro is not active — sync field groups from acf-json/."
 
-msgid "Rezervace do passu bude brzy k dispozici."
-msgstr "Adding to the pass will be available soon."
-
 msgid "%d volné místo"
 msgid_plural "%d volných míst"
 msgstr[0] "%d spot left"
 msgstr[1] "%d spots left"
+
+msgid "Pass"
+msgstr "Pass"
+
+msgid "V passu"
+msgstr "In the pass"
+
+msgid "Pass (%d)"
+msgstr "Pass (%d)"
+
+msgid "Design Lab pass"
+msgstr "Design Lab pass"
+
+msgid "Přidat další workshop"
+msgstr "Add another workshop"
+
+msgid "Pass je prázdný."
+msgstr "The pass is empty."
+
+msgid "Vybrat workshopy"
+msgstr "Choose workshops"
+
+msgid "Počet účastníků"
+msgstr "Number of attendees"
+
+msgid "Stejný počet platí pro všechny workshopy v passu."
+msgstr "The same headcount applies to every workshop in the pass."
+
+msgid "Přidat účastníka"
+msgstr "Add an attendee"
+
+msgid "Odebrat účastníka"
+msgstr "Remove an attendee"
+
+msgid "Náhradník / čekací listina"
+msgstr "Waitlist"
+
+msgid "Odebrat z passu"
+msgstr "Remove from pass"
+
+msgid "Přidejte ještě %1$d workshop pro cenu Design Lab passu (od %2$d)."
+msgid_plural "Přidejte ještě %1$d workshopy pro cenu Design Lab passu (od %2$d)."
+msgstr[0] "Add %1$d more workshop for Design Lab pass pricing (from %2$d)."
+msgstr[1] "Add %1$d more workshops for Design Lab pass pricing (from %2$d)."
+
+msgid "Bez passu"
+msgstr "Without the pass"
+
+msgid "Cena Design Lab passu je započítána."
+msgstr "Design Lab pass pricing is applied."
+
+msgid "Celkem"
+msgstr "Total"
+
+msgid "Workshop nelze přidat do passu."
+msgstr "This workshop cannot be added to the pass."
+
+msgid "Pass se nepodařilo uložit."
+msgstr "The pass could not be saved."
+
+msgid "Workshop není v passu."
+msgstr "This workshop is not in the pass."
+
+msgid "Přidáno do passu."
+msgstr "Added to the pass."
+
+msgid "Odebráno z passu."
+msgstr "Removed from the pass."
+
+msgid "Něco se pokazilo. Zkuste to znovu."
+msgstr "Something went wrong. Please try again."
+
+msgid "Kapacita je naplněna."
+msgstr "This workshop is fully booked."
+
+msgid "Neplatný počet míst."
+msgstr "Invalid number of spots."
+
+msgid "Workshop „%s“ nemá volnou kapacitu pro tento počet účastníků."
+msgstr "Workshop “%s” does not have capacity for this many attendees."
+
+msgid "Stránka passu"
+msgstr "Pass page"
+
+msgid "Stránka se shortcode [dlab_pass], obvykle /pass/."
+msgstr "Page with the [dlab_pass] shortcode, usually /pass/."

@@ -18,6 +18,7 @@ $occupancy  = DLab_Workshop::get_occupancy($post_id);
 $img_id     = DLab_Workshop::get_tile_image_id($post_id);
 $open       = DLab_Workshop::is_booking_open($post_id);
 $full       = ($occupancy['status'] === 'full');
+$class      = '';
 ?>
 <div class="grid-item dlab-card" data-post-id="<?php echo esc_attr((string) $post_id); ?>" data-occupancy="<?php echo esc_attr($occupancy['status']); ?>">
     <div class="grid-item--img_container">
@@ -47,14 +48,7 @@ $full       = ($occupancy['status'] === 'full');
             <a class="dlab-card__explore minor" href="<?php echo esc_url($permalink); ?>">
                 <?php esc_html_e('Prozkoumat', 'design-lab'); ?>
             </a>
-            <button
-                type="button"
-                class="btn dlab-btn dlab-btn--pass"
-                data-dlab-add="<?php echo esc_attr((string) $post_id); ?>"
-                <?php echo (!$open || $full) ? ' disabled' : ''; ?>
-            >
-                <?php esc_html_e('Přidat do passu', 'design-lab'); ?>
-            </button>
+            <?php include DLAB_PLUGIN_DIR . 'public/partials/pass-action.php'; ?>
         </div>
     </div>
 </div>

@@ -198,7 +198,7 @@ class DLab_Workshop {
     }
 
     /**
-     * Occupancy for grid (no booking table yet — remaining = limit).
+     * Occupancy for grid cards. Used counts come from booking tables (Phase 4).
      *
      * @return array{regular_limit:int,regular_used:int,alternate_limit:int,alternate_used:int,status:string,label:string}
      */

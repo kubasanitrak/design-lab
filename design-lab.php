@@ -3,7 +3,7 @@
  * Plugin Name: Design Lab
  * Plugin URI: https://github.com/kubasanitrak/design-lab
  * Description: Sobotní Design Lab — workshopy, pass a rezervace pro WordPress.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Author: kubasanitrak
  * Author URI: https://github.com/kubasanitrak
  * License: GPL-2.0+
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('DLAB_VERSION', '0.1.0');
+define('DLAB_VERSION', '0.2.0');
 
 /** Save ACF field group exports into plugin `acf-json/` (set false to disable). */
 if (!defined('DLAB_ACF_SAVE_JSON')) {

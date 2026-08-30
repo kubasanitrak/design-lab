@@ -15,6 +15,7 @@ class DLab_Settings {
     const OPT_CURRENCY_SYMBOL       = 'dlab_currency_symbol';
     const OPT_CURRENCY_POSITION     = 'dlab_currency_position';
     const OPT_LISTING_PAGE          = 'dlab_listing_page';
+    const OPT_PASS_PAGE             = 'dlab_pass_page';
     const OPT_GDPR_PAGE             = 'dlab_gdpr_page';
     const OPT_TERMS_PAGE            = 'dlab_terms_page';
 
@@ -30,6 +31,7 @@ class DLab_Settings {
             self::OPT_CURRENCY_SYMBOL       => 'Kč',
             self::OPT_CURRENCY_POSITION     => 'after',
             self::OPT_LISTING_PAGE          => 0,
+            self::OPT_PASS_PAGE             => 0,
             self::OPT_GDPR_PAGE             => 0,
             self::OPT_TERMS_PAGE            => 0,
         );
@@ -70,7 +72,15 @@ class DLab_Settings {
     }
 
     public static function listing_page_id() {
-        return (int) get_option(self::OPT_LISTING_PAGE, 0);
+        $opt = (int) get_option(self::OPT_LISTING_PAGE, 0);
+        if ($opt) {
+            return $opt;
+        }
+        $ids = get_option('dlab_page_ids', array());
+        if (is_array($ids) && !empty($ids['listing'])) {
+            return (int) $ids['listing'];
+        }
+        return 0;
     }
 
     public static function listing_page_url() {
@@ -84,10 +94,34 @@ class DLab_Settings {
         return home_url('/design-lab/');
     }
 
+    public static function pass_page_id() {
+        $opt = (int) get_option(self::OPT_PASS_PAGE, 0);
+        if ($opt) {
+            return $opt;
+        }
+        $ids = get_option('dlab_page_ids', array());
+        if (is_array($ids) && !empty($ids['pass'])) {
+            return (int) $ids['pass'];
+        }
+        return 0;
+    }
+
+    public static function pass_page_url() {
+        $id = self::pass_page_id();
+        if ($id) {
+            $url = get_permalink($id);
+            if ($url) {
+                return $url;
+            }
+        }
+        return home_url('/pass/');
+    }
+
     public function register_settings() {
         $ints = array(
             self::OPT_PASS_MIN_WORKSHOPS,
             self::OPT_LISTING_PAGE,
+            self::OPT_PASS_PAGE,
             self::OPT_GDPR_PAGE,
             self::OPT_TERMS_PAGE,
         );

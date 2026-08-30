@@ -55,6 +55,7 @@ class DLab_Public {
             'dlab_workshop_detail',
             'dlab_add_to_pass',
             'dlab_basket_count',
+            'dlab_pass',
         );
         foreach ($tags as $tag) {
             if (has_shortcode($post->post_content, $tag)) {
@@ -88,8 +89,18 @@ class DLab_Public {
         wp_localize_script('dlab-public', 'dlab_public', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('dlab_public'),
-            'i18n'     => array(
-                'booking_soon' => __('Rezervace do passu bude brzy k dispozici.', 'design-lab'),
+            'pass_url'    => DLab_Settings::pass_page_url(),
+            'listing_url' => DLab_Settings::listing_page_url(),
+            'in_pass'     => DLab_Basket::current_in_pass_ids(),
+            'count'       => DLab_Basket::current_count(),
+            'i18n'        => array(
+                'add_to_pass'  => __('Přidat do passu', 'design-lab'),
+                'in_pass'      => __('V passu', 'design-lab'),
+                'pass_count'   => __('Pass (%d)', 'design-lab'),
+                'add_workshop' => __('Přidat další workshop', 'design-lab'),
+                'added'        => __('Přidáno do passu.', 'design-lab'),
+                'removed'      => __('Odebráno z passu.', 'design-lab'),
+                'error'        => __('Něco se pokazilo. Zkuste to znovu.', 'design-lab'),
             ),
         ));
     }

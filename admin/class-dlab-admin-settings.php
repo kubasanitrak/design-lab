@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings screen (Phase 0/1 subset).
+ * Settings screen.
  */
 
 if (!defined('ABSPATH')) {
@@ -83,6 +83,23 @@ class DLab_Admin_Settings {
                             ));
                             ?>
                             <p class="description"><?php esc_html_e('Stránka se shortcode [dlab_workshops_list], obvykle /design-lab/.', 'design-lab'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_pass_page"><?php esc_html_e('Stránka passu', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <?php
+                            wp_dropdown_pages(array(
+                                'name'              => DLab_Settings::OPT_PASS_PAGE,
+                                'id'                => 'dlab_pass_page',
+                                'selected'          => DLab_Settings::pass_page_id(),
+                                'show_option_none'  => __('— vybrat —', 'design-lab'),
+                                'option_none_value' => '0',
+                            ));
+                            ?>
+                            <p class="description"><?php esc_html_e('Stránka se shortcode [dlab_pass], obvykle /pass/.', 'design-lab'); ?></p>
                         </td>
                     </tr>
                 </table>

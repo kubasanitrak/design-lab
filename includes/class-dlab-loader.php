@@ -20,6 +20,10 @@ class DLab_Loader {
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-acf.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-workshop.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-query.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-db.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-capacity.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-pricing.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-basket.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-shortcodes.php';
 
         if (is_admin()) {
@@ -32,10 +36,13 @@ class DLab_Loader {
 
     public function run() {
         DLab_Settings::ensure_defaults();
+        DLab_DB::maybe_upgrade();
         add_action('init', array('DLab_Activator', 'maybe_create_pages'), 15);
 
         new DLab_Post_Types();
         new DLab_Settings();
+        new DLab_Capacity();
+        new DLab_Basket();
         new DLab_Shortcodes();
 
         if (class_exists('ACF')) {

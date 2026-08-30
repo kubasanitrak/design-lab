@@ -6,15 +6,16 @@ Repository: https://github.com/kubasanitrak/design-lab
 
 Default language of strings in code is **Czech**. English WordPress installs load `languages/design-lab-en_US.mo`.
 
-## Shortcodes (Phase 1)
+## Shortcodes (Phase 2)
 
 | Shortcode | Usage |
 |-----------|--------|
 | `[dlab_workshops_grid]` | Homepage / landing picks — `ids="1,2,3"`, `limit="6"`, `title="…"` |
 | `[dlab_workshops_list]` | Full grid + filters — `show_filters="true"`, `filter_action="/design-lab/"` |
 | `[dlab_workshop_detail]` | Detail (on singular omit `id`) — `id="123"` |
-| `[dlab_add_to_pass]` | CTA only — `id="123"` (basket wiring in Phase 2) |
-| `[dlab_basket_count]` | Header widget (returns `0` until Phase 2) |
+| `[dlab_add_to_pass]` | Add-to-pass CTA — `id="123"` (guests allowed) |
+| `[dlab_basket_count]` | Header widget — link `Pass (N)` to `/pass/` |
+| `[dlab_pass]` | Pass recap / editor (activation creates `/pass/`) |
 
 **URL filters** (GET): `dlab_vek`, `dlab_obor` (term slugs).
 
@@ -34,7 +35,7 @@ CPT singles live at `/design-lab/{slug}/`. The archive is off so `/design-lab/` 
 
 Lektorky use the theme CPT `instructor` (relationship field). Do not create a second instructor type.
 
-Pass rules (used from Phase 2): **2+ workshops**, **one attendee headcount for the whole pass**.
+Pass rules: **2+ workshops**, **one attendee headcount for the whole pass**. Checkout, auth, and invoices come in later phases.
 
 ## Composer
 
@@ -51,11 +52,11 @@ The main plugin file loads `vendor/autoload.php` when present.
 1. Bump `Version` and `DLAB_VERSION` in `design-lab.php`.
 2. Add a `## [x.y.z]` section to `CHANGELOG.md`.
 3. Commit and push to `main`.
-4. Create and push a matching tag (header `0.1.0` → tag `v0.1.0`):
+4. Create and push a matching tag (header `0.2.0` → tag `v0.2.0`):
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 GitHub Actions builds `design-lab.zip` and publishes a GitHub Release. Installed sites check for updates via [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) (vendored under `lib/plugin-update-checker/`).

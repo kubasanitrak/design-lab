@@ -19,7 +19,6 @@ class DLab_Shortcodes {
         add_shortcode('dlab_workshops_list', array($this, 'workshops_list'));
         add_shortcode('dlab_workshop_detail', array($this, 'workshop_detail'));
         add_shortcode('dlab_add_to_pass', array($this, 'add_to_pass'));
-        add_shortcode('dlab_basket_count', array($this, 'basket_count'));
         add_filter('the_content', array($this, 'inject_singular_detail'), 8);
         add_filter('dlab_enqueue_public_assets', array($this, 'force_enqueue_assets'));
     }
@@ -169,15 +168,6 @@ class DLab_Shortcodes {
             'class'   => $atts['class'],
         ));
         return ob_get_clean();
-    }
-
-    /**
-     * [dlab_basket_count] — placeholder until Phase 2.
-     */
-    public function basket_count() {
-        $this->flag_assets();
-        $count = (int) apply_filters('dlab_basket_count', 0);
-        return '<span class="dlab-basket-count" data-dlab-basket-count="' . esc_attr((string) $count) . '">' . esc_html((string) $count) . '</span>';
     }
 
     /**
