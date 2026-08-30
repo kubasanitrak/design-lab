@@ -1,0 +1,10 @@
+// Fallback SCSS tokens. Prefer theme CSS custom properties already on :root
+// (`--pad-T`, `--color-contrast-high`, `--gap`, …).
+
+$line-THICK: 1px;
+$bor-RADIUS: 10px;
+$btn-RADIUS: 20vw;
+$fz-PLAIN: calc(12px + (14 - 12) * ((100vw - 320px) / (2560 - 320)));
+$fz-H4: calc(19px + (32 - 19) * ((100vw - 320px) / (2560 - 320)));
+$fz-H5: calc(17px + (26 - 17) * ((100vw - 320px) / (2560 - 320)));
+$fz-MINOR: calc(12px + (12 - 12) * ((100vw - 320px) / (2560 - 320)));

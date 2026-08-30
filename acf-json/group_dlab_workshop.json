@@ -1,0 +1,296 @@
+{
+    "key": "group_dlab_workshop",
+    "title": "Design Lab – Workshop",
+    "fields": [
+        {
+            "key": "field_dlab_workshop_type",
+            "label": "Typ workshopu",
+            "name": "workshop_type",
+            "type": "select",
+            "choices": {
+                "designlab": "Design Lab"
+            },
+            "default_value": "designlab",
+            "return_format": "value"
+        },
+        {
+            "key": "field_dlab_booking_open",
+            "label": "Rezervace otevřena",
+            "name": "booking_open",
+            "type": "true_false",
+            "ui": 1,
+            "default_value": 1
+        },
+        {
+            "key": "field_dlab_show_attendee_list",
+            "label": "Zobrazit seznam účastníků",
+            "name": "show_attendee_list",
+            "type": "true_false",
+            "ui": 1,
+            "default_value": 1,
+            "instructions": "Na webu uvidí pouze přihlášení členové (a administrátoři)."
+        },
+        {
+            "key": "field_dlab_workshop_date",
+            "label": "Datum workshopu",
+            "name": "workshop_date",
+            "type": "date_picker",
+            "display_format": "d.m.Y",
+            "return_format": "Y-m-d"
+        },
+        {
+            "key": "field_dlab_time_from",
+            "label": "Začátek",
+            "name": "time_from",
+            "type": "time_picker",
+            "display_format": "H:i",
+            "return_format": "H:i"
+        },
+        {
+            "key": "field_dlab_time_to",
+            "label": "Konec",
+            "name": "time_to",
+            "type": "time_picker",
+            "display_format": "H:i",
+            "return_format": "H:i"
+        },
+        {
+            "key": "field_dlab_place_text",
+            "label": "Místo – text",
+            "name": "place_text",
+            "type": "textarea",
+            "rows": 3
+        },
+        {
+            "key": "field_dlab_place_photo",
+            "label": "Místo – foto",
+            "name": "place_photo",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_dlab_place_map_url",
+            "label": "Místo – odkaz (mapa / GPS)",
+            "name": "place_map_url",
+            "type": "url",
+            "instructions": "URL na mapu (např. Google Maps se souřadnicemi)."
+        },
+        {
+            "key": "field_dlab_price_per_person",
+            "label": "Cena za osobu",
+            "name": "price_per_person",
+            "type": "number",
+            "min": 0,
+            "step": 1,
+            "append": "Kč"
+        },
+        {
+            "key": "field_dlab_pass_price",
+            "label": "Cena v passu",
+            "name": "pass_price",
+            "type": "number",
+            "min": 0,
+            "step": 1,
+            "append": "Kč",
+            "instructions": "Informativní na kartě. Konečná cena se spočítá v pokladně, pokud je v košíku 2 a více workshopů. Jeden počet účastníků platí pro celý pass."
+        },
+        {
+            "key": "field_dlab_capacity_regular",
+            "label": "Kapacita",
+            "name": "capacity_regular",
+            "type": "number",
+            "min": 0,
+            "default_value": 0,
+            "instructions": "0 = neomezeno"
+        },
+        {
+            "key": "field_dlab_capacity_alternate",
+            "label": "Náhradníci",
+            "name": "capacity_alternate",
+            "type": "number",
+            "min": 0,
+            "default_value": 0,
+            "instructions": "0 = vypnuto"
+        },
+        {
+            "key": "field_dlab_instructors",
+            "label": "Lektorky",
+            "name": "instructors",
+            "type": "relationship",
+            "post_type": ["instructor"],
+            "filters": ["search"],
+            "return_format": "id",
+            "min": 0,
+            "max": ""
+        },
+        {
+            "key": "field_dlab_optional_services",
+            "label": "Volitelné služby",
+            "name": "optional_services",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Přidat službu",
+            "sub_fields": [
+                {
+                    "key": "field_dlab_service_label",
+                    "label": "Popisek",
+                    "name": "label",
+                    "type": "text"
+                },
+                {
+                    "key": "field_dlab_service_slug",
+                    "label": "Identifikátor",
+                    "name": "slug",
+                    "type": "text",
+                    "instructions": "Bez mezer, pro formulář rezervace"
+                },
+                {
+                    "key": "field_dlab_service_required",
+                    "label": "Povinné",
+                    "name": "required",
+                    "type": "true_false",
+                    "ui": 1
+                },
+                {
+                    "key": "field_dlab_service_price_addon",
+                    "label": "Příplatek",
+                    "name": "price_addon",
+                    "type": "number",
+                    "min": 0,
+                    "step": 1
+                },
+                {
+                    "key": "field_dlab_service_capacity",
+                    "label": "Kapacita",
+                    "name": "capacity",
+                    "type": "number",
+                    "min": 0,
+                    "default_value": 0,
+                    "instructions": "0 = neomezeno"
+                }
+            ]
+        },
+        {
+            "key": "field_dlab_booking_form_fields",
+            "label": "Pole formuláře účastníka",
+            "name": "booking_form_fields",
+            "type": "repeater",
+            "layout": "table",
+            "button_label": "Přidat pole",
+            "instructions": "Jeden počet účastníků platí pro celý pass. Extra pole (věk, alergie…) se vyplní jednou.",
+            "sub_fields": [
+                {
+                    "key": "field_dlab_bff_key",
+                    "label": "Klíč",
+                    "name": "field_key",
+                    "type": "text"
+                },
+                {
+                    "key": "field_dlab_bff_label",
+                    "label": "Popisek",
+                    "name": "label",
+                    "type": "text"
+                },
+                {
+                    "key": "field_dlab_bff_type",
+                    "label": "Typ",
+                    "name": "field_type",
+                    "type": "select",
+                    "choices": {
+                        "text": "Text",
+                        "date": "Datum",
+                        "textarea": "Textarea",
+                        "select": "Výběr"
+                    },
+                    "return_format": "value"
+                },
+                {
+                    "key": "field_dlab_bff_required",
+                    "label": "Povinné",
+                    "name": "required",
+                    "type": "true_false",
+                    "ui": 1
+                }
+            ]
+        },
+        {
+            "key": "field_dlab_synopsis",
+            "label": "Krátké info",
+            "name": "synopsis",
+            "type": "textarea",
+            "rows": 4,
+            "instructions": "Shrnutí pro grid a hlavičku detailu (pokud není excerpt)."
+        },
+        {
+            "key": "field_dlab_prerequisites",
+            "label": "Předpoklady",
+            "name": "prerequisites",
+            "type": "textarea",
+            "rows": 3
+        },
+        {
+            "key": "field_dlab_program_arr",
+            "label": "Program",
+            "name": "program_arr",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Přidat den / sekci",
+            "sub_fields": [
+                {
+                    "key": "field_dlab_program_row_label",
+                    "label": "Nadpis sekce",
+                    "name": "program_row_label",
+                    "type": "text"
+                },
+                {
+                    "key": "field_dlab_program_row",
+                    "label": "Řádky programu",
+                    "name": "program_row",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Přidat řádek",
+                    "sub_fields": [
+                        {
+                            "key": "field_dlab_program_row_time",
+                            "label": "Čas",
+                            "name": "program_row_time",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_dlab_program_row_content",
+                            "label": "Obsah",
+                            "name": "program_row_content",
+                            "type": "text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_dlab_gallery",
+            "label": "Galerie",
+            "name": "gallery",
+            "type": "gallery",
+            "return_format": "array",
+            "preview_size": "medium"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "dlab_workshop"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "show_in_rest": 1,
+    "modified": 1788048000
+}

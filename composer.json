@@ -1,0 +1,7 @@
+{
+    "name": "kubasanitrak/design-lab",
+    "description": "Design Lab workshops and pass bookings for WordPress",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {}
+}

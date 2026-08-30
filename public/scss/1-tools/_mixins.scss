@@ -1,0 +1,11 @@
+@mixin mq($point) {
+	@if $point == mq-land {
+		@media screen and (orientation: landscape) { @content; }
+	}
+	@else if $point == mq-portr {
+		@media screen and (orientation: portrait) { @content; }
+	}
+	@else if $point == mq-M-UP {
+		@media screen and (min-width: 40.1rem) { @content; }
+	}
+}

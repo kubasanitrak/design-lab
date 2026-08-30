@@ -1,0 +1,19 @@
+.dlab-admin-cards {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0;
+}
+
+.dlab-admin-card {
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  min-width: 10rem;
+}
+
+.dlab-admin-card__value {
+  font-size: 1.75rem;
+  margin: 0.25rem 0 0;
+}

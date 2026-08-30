@@ -1,0 +1,215 @@
+# Copyright (C) 2026 kubasanitrak
+# This file is distributed under the same license as the Design Lab package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Design Lab 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/kubasanitrak/design-lab/issues\n"
+"POT-Creation-Date: 2026-08-30 17:00+0200\n"
+"PO-Revision-Date: 2026-08-30 17:00+0200\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Design Lab"
+msgstr "Design Lab"
+
+msgid "Workshopy"
+msgstr "Workshops"
+
+msgid "Workshop"
+msgstr "Workshop"
+
+msgid "Přidat workshop"
+msgstr "Add workshop"
+
+msgid "Přidat nový workshop"
+msgstr "Add new workshop"
+
+msgid "Upravit workshop"
+msgstr "Edit workshop"
+
+msgid "Nový workshop"
+msgstr "New workshop"
+
+msgid "Zobrazit workshop"
+msgstr "View workshop"
+
+msgid "Hledat workshopy"
+msgstr "Search workshops"
+
+msgid "Žádné workshopy nenalezeny"
+msgstr "No workshops found"
+
+msgid "V koši nejsou žádné workshopy"
+msgstr "No workshops in trash"
+
+msgid "Věk"
+msgstr "Age"
+
+msgid "Obor"
+msgstr "Field"
+
+msgid "6+"
+msgstr "6+"
+
+msgid "8+"
+msgstr "8+"
+
+msgid "10+"
+msgstr "10+"
+
+msgid "Design"
+msgstr "Design"
+
+msgid "Móda"
+msgstr "Fashion"
+
+msgid "Datum"
+msgstr "Date"
+
+msgid "Rezervace"
+msgstr "Booking"
+
+msgid "Otevřeno"
+msgstr "Open"
+
+msgid "Zavřeno"
+msgstr "Closed"
+
+msgid "Volná místa"
+msgstr "Spots available"
+
+msgid "Náhradníci"
+msgstr "Waitlist"
+
+msgid "Obsazeno"
+msgstr "Fully booked"
+
+msgid "Prozkoumat"
+msgstr "Explore"
+
+msgid "Přidat do passu"
+msgstr "Add to pass"
+
+msgid "Žádné workshopy nevyhovují filtru."
+msgstr "No workshops match this filter."
+
+msgid "Obnovit filtr"
+msgstr "Reset filter"
+
+msgid "Filtrace"
+msgstr "Filters"
+
+msgid "Workshop nenalezen."
+msgstr "Workshop not found."
+
+msgid "Rezervace není momentálně dostupná."
+msgstr "Booking is not available at the moment."
+
+msgid "Termín je obsazený."
+msgstr "This date is fully booked."
+
+msgid "Přihláška na seznam náhradníků."
+msgstr "You will be added to the waitlist."
+
+msgid "← Zpět na výpis"
+msgstr "← Back to listing"
+
+msgid "O workshopu"
+msgstr "About the workshop"
+
+msgid "Předpoklady"
+msgstr "Prerequisites"
+
+msgid "Detaily"
+msgstr "Details"
+
+msgid "Místo"
+msgstr "Place"
+
+msgid "Zobrazit na mapě"
+msgstr "View on map"
+
+msgid "Volitelné služby"
+msgstr "Optional extras"
+
+msgid "Cena za osobu"
+msgstr "Price per person"
+
+msgid "V passu od %s"
+msgstr "From %s with a pass"
+
+msgid "Program"
+msgstr "Programme"
+
+msgid "O lektorkách"
+msgstr "About the instructors"
+
+msgid "Účastníci"
+msgstr "Attendees"
+
+msgid "Seznam účastníků bude dostupný po spuštění rezervací."
+msgstr "The attendee list will be available once bookings open."
+
+msgid "Přehled"
+msgstr "Overview"
+
+msgid "Nastavení"
+msgstr "Settings"
+
+msgid "Design Lab — nastavení"
+msgstr "Design Lab — settings"
+
+msgid "Pass — minimum workshopů"
+msgstr "Pass — minimum workshops"
+
+msgid "Sleva Design Lab pass se uplatní od tohoto počtu různých workshopů v košíku (výchozí 2)."
+msgstr "The Design Lab pass discount applies from this number of distinct workshops in the basket (default 2)."
+
+msgid "Pass — počet účastníků"
+msgstr "Pass — attendee count"
+
+msgid "Jeden počet účastníků pro celý pass (ne zvlášť u každého workshopu)."
+msgstr "One attendee headcount for the whole pass (not per workshop)."
+
+msgid "Měna"
+msgstr "Currency"
+
+msgid "za částkou (Kč)"
+msgstr "after amount (Kč)"
+
+msgid "před částkou"
+msgstr "before amount"
+
+msgid "Stránka výpisu"
+msgstr "Listing page"
+
+msgid "— vybrat —"
+msgstr "— select —"
+
+msgid "Stránka se shortcode [dlab_workshops_list], obvykle /design-lab/."
+msgstr "Page with the [dlab_workshops_list] shortcode, usually /design-lab/."
+
+msgid "Publikované workshopy"
+msgstr "Published workshops"
+
+msgid "Rezervace, košík a platby přijdou v dalších fázích. Teď lze zakládat workshopy a vkládat shortcody na stránky."
+msgstr "Bookings, basket and payments come in later phases. You can create workshops and place shortcodes now."
+
+msgid "Nemáte oprávnění k tomuto přehledu."
+msgstr "You do not have permission to view this overview."
+
+msgid "ACF Pro není aktivní — synchronizujte field groups z acf-json/."
+msgstr "ACF Pro is not active — sync field groups from acf-json/."
+
+msgid "Rezervace do passu bude brzy k dispozici."
+msgstr "Adding to the pass will be available soon."
+
+msgid "%d volné místo"
+msgid_plural "%d volných míst"
+msgstr[0] "%d spot left"
+msgstr[1] "%d spots left"
