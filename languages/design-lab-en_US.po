@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Design Lab package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Design Lab 0.2.0\n"
+"Project-Id-Version: Design Lab 0.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/kubasanitrak/design-lab/issues\n"
 "POT-Creation-Date: 2026-08-30 17:00+0200\n"
 "PO-Revision-Date: 2026-08-30 17:00+0200\n"
@@ -296,3 +296,93 @@ msgstr "Pass page"
 
 msgid "Stránka se shortcode [dlab_pass], obvykle /pass/."
 msgstr "Page with the [dlab_pass] shortcode, usually /pass/."
+
+msgid "Platba — bankovní účet"
+msgstr "Payment — bank account"
+
+msgid "Údaje pro QR platbu (číslo účtu + kód banky) a rekapitulaci platby (IBAN, SWIFT)."
+msgstr "Used for the payment QR (account number + bank code) and the payment recap (IBAN, SWIFT)."
+
+msgid "Název účtu"
+msgstr "Account name"
+
+msgid "Příjemce na platební rekapitulaci."
+msgstr "Recipient shown on the payment recap."
+
+msgid "Číslo účtu"
+msgstr "Account number"
+
+msgid "Bez kódu banky, včetně předčíslí (např. 19-1234567890)."
+msgstr "Without the bank code, including prefix (e.g. 19-1234567890)."
+
+msgid "Kód banky"
+msgstr "Bank code"
+
+msgid "Čtyřmístný kód (např. 3030). Nutný pro QR kód."
+msgstr "Four-digit code (e.g. 3030). Required for the QR code."
+
+msgid "SWIFT (BIC)"
+msgstr "SWIFT (BIC)"
+
+msgid "Fakturace"
+msgstr "Invoicing"
+
+msgid "Číselná řada faktur"
+msgstr "Invoice number sequence"
+
+msgid "Čísla dokladů mají formát RR-##### (např. 26-00001). Toto je další pořadové číslo pro nové faktury a variabilní symbol QR platby."
+msgstr "Document numbers use format YY-##### (e.g. 26-00001). This is the next sequence number for new invoices and the QR payment variable symbol."
+
+msgid "Další číslo: %s"
+msgstr "Next number: %s"
+
+msgid "Aktuální počítadlo: %d"
+msgstr "Current sequence counter: %d"
+
+msgid "Členský účet — rezervace"
+msgstr "Member account — reservations"
+
+msgid "Platnost rezervace (hodin)"
+msgstr "Reservation validity (hours)"
+
+msgid "Jak dlouho držíme rezervaci (čekání na platbu). Výchozí 72 hodin."
+msgstr "How long we hold the reservation (awaiting payment). Default 72 hours."
+
+msgid "Zrušení rezervace (hodiny před začátkem)"
+msgstr "Cancel reservation (hours before start)"
+
+msgid "Do této lhůty může uživatel rezervaci zrušit. Výchozí 24 hodin před začátkem workshopu."
+msgstr "Until this deadline the user may cancel. Default 24 hours before the workshop starts."
+
+msgid "E-maily"
+msgstr "Emails"
+
+msgid "Odesílatel"
+msgstr "Sender"
+
+msgid "Jméno zobrazené v odchozích e-mailech."
+msgstr "Name shown on outgoing emails."
+
+msgid "E-mail odesílatele"
+msgstr "Sender email"
+
+msgid "Adresa, ze které se e-maily odesílají (From)."
+msgstr "Address emails are sent from (From)."
+
+msgid "Formát e-mailů"
+msgstr "Email format"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Prostý text"
+msgstr "Plain text"
+
+msgid "Notifikace admin"
+msgstr "Admin notifications"
+
+msgid "Posílat e-mail při nové objednávce"
+msgstr "Send an email on a new order"
+
+msgid "E-mail pro notifikace admin"
+msgstr "Admin notification email"

@@ -52,11 +52,11 @@ The main plugin file loads `vendor/autoload.php` when present.
 1. Bump `Version` and `DLAB_VERSION` in `design-lab.php`.
 2. Add a `## [x.y.z]` section to `CHANGELOG.md`.
 3. Commit and push to `main`.
-4. Create and push a matching tag (header `0.2.0` → tag `v0.2.0`):
+4. Create and push a matching tag (header `0.3.0` → tag `v0.3.0`):
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
 GitHub Actions builds `design-lab.zip` and publishes a GitHub Release. Installed sites check for updates via [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) (vendored under `lib/plugin-update-checker/`).
