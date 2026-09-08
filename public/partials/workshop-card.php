@@ -21,33 +21,31 @@ $full       = ($occupancy['status'] === 'full');
 $class      = '';
 ?>
 <div class="grid-item dlab-card" data-post-id="<?php echo esc_attr((string) $post_id); ?>" data-occupancy="<?php echo esc_attr($occupancy['status']); ?>">
-    <div class="grid-item--img_container">
+    <div class="grid-item--img_container dlab-card--img_container">
         <?php if ($img_id) : ?>
             <?php echo wp_get_attachment_image($img_id, 'large', false, array(
                 'class' => 'grid-item--img',
                 'alt'   => $title,
             )); ?>
         <?php endif; ?>
+        <?php if ($age) : ?>
+            <span class="dlab-card__age"><?php echo esc_html($age); ?></span>
+        <?php endif; ?>
     </div>
     <div class="grid-item--label">
-        <?php if ($date) : ?>
-            <time class="dlab-card__date minor" datetime="<?php echo esc_attr(DLab_Workshop::get_workshop_date($post_id)); ?>">
-                <?php echo esc_html($date); ?>
-            </time>
-        <?php endif; ?>
         <h4 class="grid-item--title strong"><?php echo esc_html($title); ?></h4>
         <div class="dlab-card__meta">
-            <?php if ($age) : ?>
-                <span class="dlab-card__age"><?php echo esc_html($age); ?></span>
+            <?php if ($date) : ?>
+                <time class="dlab-card__date minor" datetime="<?php echo esc_attr(DLab_Workshop::get_workshop_date($post_id)); ?>">
+                    <?php echo esc_html($date); ?>
+                </time>
             <?php endif; ?>
             <span class="dlab-card__occupancy dlab-card__occupancy--<?php echo esc_attr($occupancy['status']); ?>">
                 <?php echo esc_html($occupancy['label']); ?>
             </span>
         </div>
         <div class="dlab-card__actions">
-            <a class="dlab-card__explore minor" href="<?php echo esc_url($permalink); ?>">
-                <?php esc_html_e('Prozkoumat', 'design-lab'); ?>
-            </a>
+            <a class="dlab-card__explore minor" href="<?php echo esc_url($permalink); ?>">→ <?php esc_html_e('Prozkoumat', 'design-lab'); ?></a>
             <?php include DLAB_PLUGIN_DIR . 'public/partials/pass-action.php'; ?>
         </div>
     </div>

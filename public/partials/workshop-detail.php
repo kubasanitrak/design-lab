@@ -39,7 +39,7 @@ $instructors = DLab_Workshop::get_instructor_ids($post_id);
 $body = $post->post_content;
 $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
 ?>
-<article class="dlab-detail section-content--dilna" id="dlab-detail-<?php echo esc_attr((string) $post_id); ?>">
+<article class="dlab-detail section-content section-full-width section-content--dilna" id="dlab-detail-<?php echo esc_attr((string) $post_id); ?>">
 
     <div data-theme="DD-beige" class="section section-full-width section-content--dilna section-padded">
         <div class="inner-content">

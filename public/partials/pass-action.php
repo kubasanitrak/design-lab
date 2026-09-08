@@ -18,7 +18,7 @@ $full        = !empty($full);
 $class       = isset($class) ? trim((string) $class) : '';
 $in_pass     = DLab_Basket::is_current_in_pass($post_id);
 $pass_url    = DLab_Settings::pass_page_url();
-$btn_classes = trim('btn dlab-btn dlab-btn--pass ' . $class);
+$btn_classes = trim('btn dlab-btn dlab-btn--pass' . $class);
 ?>
 <span
     class="dlab-pass-action"

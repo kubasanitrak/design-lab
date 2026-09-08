@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1]
+
+- Workshop card: age badge on the image, date in meta, compiled public CSS.
+
 ## [0.3.0]
 
 - Admin settings for checkout later phases: reservation hold/cancel windows, bank details for QR platba, invoice sequence (YY-#####), email sender and admin notifications.

@@ -66,6 +66,9 @@
   display: block;
   margin: 0 0 calc(var(--gap) * 0.35);
 }
+.dlab-card--img_container {
+  position: relative;
+}
 .dlab-card .dlab-card__meta {
   display: flex;
   flex-wrap: wrap;
@@ -75,13 +78,16 @@
 }
 .dlab-card .dlab-card__age {
   display: inline-flex;
-  padding: calc(var(--gap) * 0.2) calc(var(--gap) * 0.65);
+  padding: calc(var(--gap) * 0.65);
   border-radius: 10vmax;
   background: var(--color-contrast-high);
   color: var(--DD-white, #fff);
-  font-size: calc(12px + 0 * (100vw - 320px) / 2240);
+  font-size: calc(17px + 9 * (100vw - 320px) / 2240);
   line-height: 1.2;
   letter-spacing: 0.03em;
+  position: absolute;
+  top: var(--gap);
+  right: var(--gap);
 }
 .dlab-card .dlab-card__occupancy {
   font-size: calc(12px + 0 * (100vw - 320px) / 2240);
