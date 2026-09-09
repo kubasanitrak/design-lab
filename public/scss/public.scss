@@ -77,7 +77,8 @@
 .dlab-card {
 	.dlab-card__date {
 		display: block;
-		margin: 0 0 calc(var(--gap) * 0.35);
+		font-size: inherit;
+		// margin: 0 0 calc(var(--gap) * 0.35);
 	}
 
 	&--img_container {
@@ -87,9 +88,16 @@
 	.dlab-card__meta {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
+		align-items: flex-start;
+		// justify-content: flex-start;
 		gap: calc(var(--gap) * 0.5);
-		margin-bottom: calc(var(--gap) * 0.75);
+		// margin-bottom: calc(var(--gap) * 0.75);
+		margin-block: calc(var(--gap) * -.5) calc(var(--gap) * 0.75);
+		@include mq(mq-land) {
+			margin-bottom: 0;
+		}
+		// font-size: $fz-H6;
+		font-size: $fz-PLAIN;
 	}
 
 	.dlab-card__age {
@@ -107,7 +115,8 @@
 	}
 
 	.dlab-card__occupancy {
-		font-size: $fz-MINOR;
+		// font-size: $fz-PLAIN;
+		font-size: inherit;
 		letter-spacing: 0.03em;
 
 		&--full {
@@ -119,18 +128,34 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
+		justify-content: space-between;
 		gap: calc(var(--gap) * 0.75);
 		position: relative;
 		z-index: 2;
+		background-color: transparent;
+		border: $line-THICK solid var(--color-contrast-high, #000);
+		border-radius: $btn-RADIUS;
+		margin-block: calc(var(--pad-R) * .25) calc(var(--pad-R) * .5);
+		padding-block: calc(var(--gap) * 0.25);
+		padding-inline: calc(var(--gap) * 1.25)  calc(var(--gap) * 0.35);
+		span {
+			width: 50%;
+			a {
+				width: 100%;
+			}
+		}
 	}
 
 	.dlab-card__explore {
-		text-decoration: underline;
+		// text-decoration: underline;
+		text-decoration: none;
 	}
 }
 
 .dlab-btn {
 	cursor: pointer;
+	padding-inline: calc(var(--pad-R) * 1.5);
+	padding-block: calc(0.35em + 2px) calc(0.35em + 2px);
 
 	&[disabled] {
 		opacity: 0.55;
@@ -139,6 +164,17 @@
 
 	&--large {
 		margin-top: var(--gap);
+	}
+	&--pass {
+		background-color: var(--color-contrast-high, #000);
+		color: var(--DD-white, #fff);
+		border: none;
+		&.is-in-pass {
+			--color-contrast-high: var(--DD-black, #000);
+			color: var(--DD-black, #000);
+			background-color: transparent;
+			border: $line-THICK solid var(--color-contrast-high, #000);
+		}
 	}
 }
 
@@ -153,18 +189,19 @@
 
 	&__facts {
 		list-style: none;
-		margin: calc(var(--pad-T) * 1) 0;
+		margin: calc(var(--pad-T) * .25) 0;
 		padding: 0;
 
 		li {
 			position: relative;
-			padding-left: 1.25em;
+			padding-left: 0;
 
-			// &:before {
-			// 	content: "•";
-			// 	position: absolute;
-			// 	left: 0;
-			// }
+			&:before {
+				content: none;
+				// content: "•";
+				// position: absolute;
+				// left: 0;
+			}
 		}
 	}
 
@@ -178,7 +215,7 @@
 
 		li {
 			display: inline-flex;
-			padding: calc(var(--gap) * 0.2) calc(var(--gap) * 0.65);
+			padding: calc(var(--gap) * 0.75) calc(var(--gap) * 1.5);
 			border-radius: 10vmax;
 			background: var(--color-contrast-high);
 			color: var(--DD-white, #fff);
@@ -212,8 +249,12 @@
 	}
 
 	&__cta-container {
-		text-align: center;
 		padding-block: calc(var(--pad-T) * 1.3333333) calc(var(--pad-T) * 2);
+		text-align: center;
+		@include mq(mq-land) {
+			text-align: left;
+			padding-block: calc(var(--pad-T) * .5) calc(var(--pad-T) * 2);
+		}
 	}
 
 	&__price {
@@ -273,6 +314,9 @@
 
 .dlab-pass-cta {
 	margin-top: calc(var(--pad-T) * 1.2);
+	@include mq(mq-land) {
+		margin-top: 0;
+	}
 
 	&__hint {
 		margin: calc(var(--gap) * 0.5) 0 0;

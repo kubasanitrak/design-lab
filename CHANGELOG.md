@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.1]
+
+- Card actions bar and pass button styling; detail CTA/tags tweaks; public CSS recompiled.
+
 ## [0.4.0]
 
 - Workshop detail rebuilt to match theme dilna sections (gallery, instructors, program table, sticky details); public CSS recompiled.

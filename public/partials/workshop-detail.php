@@ -111,13 +111,13 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
                 </ul>
 
 <!-- TAGLIST -->                    
-                <?php echo DLab_Workshop::render_tags($post_id, array('class' => 'dlab-detail__tags', 'link' => true)); ?>
+                <?php echo DLab_Workshop::render_tags($post_id, array('class' => 'dlab-detail__tags', 'link' => false)); ?>
 <!-- END TAGLIST -->                    
 
 <!-- ADD TO PASS BUTTON -->     
                 <div class="dlab-detail__cta-container">
                     <?php if ($price) : ?>
-                        <h6 class="caps"><?php esc_html_e('Cena za osobu', 'design-lab'); ?></h6>
+                        <h6 class=""><?php esc_html_e('Cena za osobu', 'design-lab'); ?></h6>
                         <h3 class="dlab-detail__price"><?php echo esc_html($price); ?></h3>
                     <?php endif; ?>
                     <?php if ($pass_price) : ?>
@@ -149,7 +149,7 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
 
                 <!-- LEKTORKY GRID -->
                 <?php if (!empty($instructors)) : ?>
-                    <h2 class="wp-block-heading"><strong><?php esc_html_e('O lektorkách', 'design-lab'); ?></strong></h2>
+                    <h2 class="wp-block-heading mar-T-2"><strong><?php esc_html_e('O lektorkách', 'design-lab'); ?></strong></h2>
                     <div class="list-grid list-grid--lecture dlab-instructors">
                         <?php
                             foreach ($instructors as $inst_id) :
@@ -215,7 +215,7 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
             <!-- ADD TO PASS BUTTON -->  
                 <div class="dlab-detail__cta-container">
                     <?php if ($price) : ?>
-                        <h6 class="caps"><?php esc_html_e('Cena za osobu', 'design-lab'); ?></h6>
+                        <h6 class=""><?php esc_html_e('Cena za osobu', 'design-lab'); ?></h6>
                         <h3 class="dlab-detail__price"><?php echo esc_html($price); ?></h3>
                     <?php endif; ?>
                     <?php if ($pass_price) : ?>
