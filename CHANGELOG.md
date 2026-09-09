@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.0]
+
+- Phase 4: book a single workshop or a pass from `/pass/` via **Rezervovat**, checkout at `/rezervace/`, reservation holds, bank-transfer recap and Paylibo QR, emails, admin reservation list.
+
 ## [0.4.2]
 
 - Pass page wrapped in theme dilna sections; detail sections use full-width layout.

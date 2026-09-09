@@ -24,11 +24,16 @@ class DLab_Loader {
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-capacity.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-pricing.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-basket.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-qr.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-emails.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-checkout.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-cron.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-shortcodes.php';
 
         if (is_admin()) {
             require_once DLAB_PLUGIN_DIR . 'admin/class-dlab-admin.php';
             require_once DLAB_PLUGIN_DIR . 'admin/class-dlab-admin-settings.php';
+            require_once DLAB_PLUGIN_DIR . 'admin/class-dlab-admin-orders.php';
         }
 
         require_once DLAB_PLUGIN_DIR . 'public/class-dlab-public.php';
@@ -43,6 +48,9 @@ class DLab_Loader {
         new DLab_Settings();
         new DLab_Capacity();
         new DLab_Basket();
+        new DLab_Checkout();
+        new DLab_Cron();
+        DLab_Cron::schedule();
         new DLab_Shortcodes();
 
         if (class_exists('ACF')) {
@@ -52,6 +60,7 @@ class DLab_Loader {
         if (is_admin()) {
             new DLab_Admin();
             new DLab_Admin_Settings();
+            new DLab_Admin_Orders();
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         }
 
@@ -60,7 +69,7 @@ class DLab_Loader {
 
     public function enqueue_admin_assets($hook) {
         $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
-        $allowed = array(DLab_Admin::MENU_SLUG, 'dlab-settings');
+        $allowed = array(DLab_Admin::MENU_SLUG, 'dlab-settings', 'dlab-orders');
         if (!in_array($page, $allowed, true) && strpos($hook, 'dlab') === false) {
             return;
         }

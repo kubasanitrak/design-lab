@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Design Lab package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Design Lab 0.4.2\n"
+"Project-Id-Version: Design Lab 0.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/kubasanitrak/design-lab/issues\n"
 "POT-Creation-Date: 2026-08-30 17:00+0200\n"
 "PO-Revision-Date: 2026-08-30 17:00+0200\n"
@@ -386,3 +386,237 @@ msgstr "Send an email on a new order"
 
 msgid "E-mail pro notifikace admin"
 msgstr "Admin notification email"
+
+msgid "Rezervovat"
+msgstr "Reserve"
+
+msgid "Rezervace nenalezena."
+msgstr "Reservation not found."
+
+msgid "Pass se nepodařilo načíst."
+msgstr "The pass could not be loaded."
+
+msgid "Souhlaste s obchodními podmínkami."
+msgstr "Please agree to the terms and conditions."
+
+msgid "Souhlaste se zpracováním osobních údajů."
+msgstr "Please agree to the processing of personal data."
+
+msgid "Rezervaci se nepodařilo vytvořit."
+msgstr "The reservation could not be created."
+
+msgid "Vyplňte jméno a platný e-mail."
+msgstr "Enter a name and a valid email address."
+
+msgid "Vyplňte telefon."
+msgstr "Enter a phone number."
+
+msgid "Vyplňte jména všech účastníků."
+msgstr "Enter the names of all attendees."
+
+msgid "Workshop „%s“ už nelze rezervovat."
+msgstr "Workshop “%s” can no longer be reserved."
+
+msgid "Čeká"
+msgstr "Pending"
+
+msgid "Čeká na platbu"
+msgstr "Awaiting payment"
+
+msgid "Zaplaceno"
+msgstr "Paid"
+
+msgid "Zrušeno"
+msgstr "Cancelled"
+
+msgid "Vypršelo"
+msgstr "Expired"
+
+msgid "Neúspěšné"
+msgstr "Failed"
+
+msgid "Místo držíme. Jakmile platbu přijmeme, pošleme potvrzení."
+msgstr "We are holding the spot. We will send confirmation once we receive the payment."
+
+msgid "Částka: %s"
+msgstr "Amount: %s"
+
+msgid "Příjemce: %s"
+msgstr "Payee: %s"
+
+msgid "Účet: %s"
+msgstr "Account: %s"
+
+msgid "Variabilní symbol: %s"
+msgstr "Variable symbol: %s"
+
+msgid "QR kód nelze vygenerovat. Použijte údaje výše."
+msgstr "The QR code could not be generated. Use the details above."
+
+msgid "QR platba"
+msgstr "QR payment"
+
+msgid "[%1$s] Potvrzení rezervace %2$s"
+msgstr "[%1$s] Reservation confirmation %2$s"
+
+msgid "Platbu prosím uhraďte do: %s"
+msgstr "Please pay by: %s"
+
+msgid "Dobrý den %1$s,\n\nvaše rezervace %2$s byla přijata.\n\n%3$s\n\nCelkem: %4$s%5$s\n\n%6$s\n"
+msgstr "Hello %1$s,\n\nyour reservation %2$s has been received.\n\n%3$s\n\nTotal: %4$s%5$s\n\n%6$s\n"
+
+msgid "Platební instrukce a QR kód: %s"
+msgstr "Payment instructions and QR code: %s"
+
+msgid "Platební instrukce najdete na webu."
+msgstr "You will find the payment instructions on the website."
+
+msgid "[%1$s] Platba přijata – %2$s"
+msgstr "[%1$s] Payment received – %2$s"
+
+msgid "Dobrý den %1$s,\n\nplatba za rezervaci %2$s byla přijata. Rezervace je potvrzena.\n"
+msgstr "Hello %1$s,\n\npayment for reservation %2$s has been received. The reservation is confirmed.\n"
+
+msgid "[%1$s] Platba za rezervaci %2$s brzy vyprší"
+msgstr "[%1$s] Payment for reservation %2$s is about to expire"
+
+msgid "Dobrý den %1$s,\n\npřipomínáme platbu rezervace %2$s (částka %3$s).\nLhůta platby vyprší: %4$s\n\n%5$s\n"
+msgstr "Hello %1$s,\n\nthis is a reminder to pay reservation %2$s (amount %3$s).\nThe payment deadline is: %4$s\n\n%5$s\n"
+
+msgid "Instrukce k platbě: "
+msgstr "Payment instructions: "
+
+msgid "[%1$s] Nová rezervace %2$s"
+msgstr "[%1$s] New reservation %2$s"
+
+msgid "Nová rezervace %1$s — %2$s\n\nSpráva: %3$s\n"
+msgstr "New reservation %1$s — %2$s\n\nAdmin: %3$s\n"
+
+msgid "Váš pass"
+msgstr "Your pass"
+
+msgid "Upravit pass"
+msgstr "Edit pass"
+
+msgid "Kontakt"
+msgstr "Contact"
+
+msgid "Jméno a příjmení"
+msgstr "Full name"
+
+msgid "E-mail"
+msgstr "Email"
+
+msgid "Telefon"
+msgstr "Phone"
+
+msgid "Stejní účastníci platí pro všechny workshopy v rezervaci."
+msgstr "The same attendees apply to every workshop in the reservation."
+
+msgid "Účastník %d"
+msgstr "Attendee %d"
+
+msgid "Platba"
+msgstr "Payment"
+
+msgid "Bankovní převod — po odeslání rezervace uvidíte platební údaje a QR kód."
+msgstr "Bank transfer — after submitting the reservation you will see payment details and a QR code."
+
+msgid "Souhlasím s <a class=\"textlink textlink-underline\" href=\"%s\" target=\"_blank\" rel=\"noopener\">obchodními podmínkami</a>"
+msgstr "I agree to the <a class=\"textlink textlink-underline\" href=\"%s\" target=\"_blank\" rel=\"noopener\">terms and conditions</a>"
+
+msgid "Souhlasím se <a class=\"textlink textlink-underline\" href=\"%s\" target=\"_blank\" rel=\"noopener\">zpracováním osobních údajů</a>"
+msgstr "I agree to the <a class=\"textlink textlink-underline\" href=\"%s\" target=\"_blank\" rel=\"noopener\">processing of personal data</a>"
+
+msgid "Potvrdit rezervaci"
+msgstr "Confirm reservation"
+
+msgid "Platební instrukce"
+msgstr "Payment instructions"
+
+msgid "Číslo rezervace:"
+msgstr "Reservation number:"
+
+msgid "Částka:"
+msgstr "Amount:"
+
+msgid "Příjemce"
+msgstr "Payee"
+
+msgid "Účet"
+msgstr "Account"
+
+msgid "Variabilní symbol"
+msgstr "Variable symbol"
+
+msgid "Zkopírováno"
+msgstr "Copied"
+
+msgid "Zkopírovat platební údaje"
+msgstr "Copy payment details"
+
+msgid "Zaplatit %s"
+msgstr "Pay %s"
+
+msgid "Uhraďte do:"
+msgstr "Pay by:"
+
+msgid "Po přijetí platby potvrdíme rezervaci a pošleme e-mail. Do té doby je místo rezervované."
+msgstr "Once we receive the payment we will confirm the reservation and send an email. Until then the spot is reserved."
+
+msgid "Zpět na workshopy"
+msgstr "Back to workshops"
+
+msgid "Vše"
+msgstr "All"
+
+msgid "Platba byla potvrzena."
+msgstr "Payment has been confirmed."
+
+msgid "Rezervace byla zrušena."
+msgstr "The reservation has been cancelled."
+
+msgid "Zákazník"
+msgstr "Customer"
+
+msgid "Stav"
+msgstr "Status"
+
+msgid "Akce"
+msgstr "Actions"
+
+msgid "Žádné rezervace."
+msgstr "No reservations."
+
+msgid "Potvrdit přijetí platby?"
+msgstr "Confirm that the payment was received?"
+
+msgid "Potvrdit platbu"
+msgstr "Confirm payment"
+
+msgid "Zrušit rezervaci?"
+msgstr "Cancel the reservation?"
+
+msgid "Zrušit"
+msgstr "Cancel"
+
+msgid "Stránka rezervace"
+msgstr "Reservation page"
+
+msgid "Stránka se shortcode [dlab_checkout], obvykle /rezervace/."
+msgstr "Page with the [dlab_checkout] shortcode, usually /rezervace/."
+
+msgid "Obchodní podmínky"
+msgstr "Terms and conditions"
+
+msgid "Ochrana osobních údajů"
+msgstr "Privacy policy"
+
+msgid "Rezervace a bankovní platba (QR) jsou aktivní. Členský účet a faktury přijdou v dalších fázích."
+msgstr "Reservations and bank payment (QR) are live. Member accounts and invoices come in later phases."
+
+msgid "Tato rezervace už není aktivní (%s)."
+msgstr "This reservation is no longer active (%s)."
+
+msgid "Platba byla přijata. Rezervace je potvrzena."
+msgstr "Payment has been received. The reservation is confirmed."

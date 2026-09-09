@@ -21,6 +21,8 @@ class DLab_Activator {
         DLab_Settings::ensure_defaults();
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-db.php';
         DLab_DB::create_tables();
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-cron.php';
+        DLab_Cron::schedule();
         self::create_pages();
 
         flush_rewrite_rules();
@@ -42,6 +44,11 @@ class DLab_Activator {
                 'title'   => __('Pass', 'design-lab'),
                 'slug'    => 'pass',
                 'content' => '[dlab_pass]',
+            ),
+            'checkout' => array(
+                'title'   => __('Rezervace', 'design-lab'),
+                'slug'    => 'rezervace',
+                'content' => '[dlab_checkout]',
             ),
         );
 
@@ -77,6 +84,9 @@ class DLab_Activator {
         if (!empty($page_ids['pass']) && !(int) get_option('dlab_pass_page', 0)) {
             update_option('dlab_pass_page', (int) $page_ids['pass']);
         }
+        if (!empty($page_ids['checkout']) && !(int) get_option('dlab_checkout_page', 0)) {
+            update_option('dlab_checkout_page', (int) $page_ids['checkout']);
+        }
     }
 
     /**
@@ -87,7 +97,7 @@ class DLab_Activator {
         if (!is_array($ids)) {
             $ids = array();
         }
-        foreach (array('listing', 'pass') as $key) {
+        foreach (array('listing', 'pass', 'checkout') as $key) {
             if (empty($ids[$key]) || !get_post($ids[$key])) {
                 self::create_pages();
                 flush_rewrite_rules();

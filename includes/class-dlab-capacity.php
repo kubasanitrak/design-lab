@@ -136,4 +136,68 @@ class DLab_Capacity {
         }
         return true;
     }
+
+    /**
+     * Hold spots for one order line (shared headcount × one workshop).
+     *
+     * @param string[] $attendee_names
+     */
+    public static function create_holds_from_line($order_id, $order_item_id, $object_id, $object_type, $user_id, $spots, $spot_type, array $attendee_names = array()) {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'dlab_booking_spots';
+        $spots = max(1, (int) $spots);
+
+        for ($i = 0; $i < $spots; $i++) {
+            $name = isset($attendee_names[$i]) ? (string) $attendee_names[$i] : '';
+            $wpdb->insert(
+                $table,
+                array(
+                    'order_id'       => (int) $order_id,
+                    'order_item_id'  => (int) $order_item_id,
+                    'object_id'      => (int) $object_id,
+                    'object_type'    => $object_type,
+                    'user_id'        => (int) $user_id,
+                    'spot_type'      => $spot_type,
+                    'status'         => self::STATUS_HELD,
+                    'attendee_index' => $i,
+                    'attendee_data'  => wp_json_encode(array('name' => $name)),
+                    'created_at'     => current_time('mysql'),
+                ),
+                array('%d', '%d', '%d', '%s', '%d', '%s', '%s', '%d', '%s', '%s')
+            );
+        }
+    }
+
+    public static function confirm_order_spots($order_id) {
+        global $wpdb;
+
+        if (!DLab_DB::table_exists('dlab_booking_spots')) {
+            return;
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'dlab_booking_spots',
+            array('status' => self::STATUS_CONFIRMED),
+            array('order_id' => (int) $order_id, 'status' => self::STATUS_HELD),
+            array('%s'),
+            array('%d', '%s')
+        );
+    }
+
+    public static function release_order_spots($order_id) {
+        global $wpdb;
+
+        if (!DLab_DB::table_exists('dlab_booking_spots')) {
+            return;
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'dlab_booking_spots',
+            array('status' => self::STATUS_CANCELLED),
+            array('order_id' => (int) $order_id),
+            array('%s'),
+            array('%d')
+        );
+    }
 }

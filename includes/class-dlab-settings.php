@@ -16,6 +16,7 @@ class DLab_Settings {
     const OPT_CURRENCY_POSITION     = 'dlab_currency_position';
     const OPT_LISTING_PAGE          = 'dlab_listing_page';
     const OPT_PASS_PAGE             = 'dlab_pass_page';
+    const OPT_CHECKOUT_PAGE         = 'dlab_checkout_page';
     const OPT_GDPR_PAGE             = 'dlab_gdpr_page';
     const OPT_TERMS_PAGE            = 'dlab_terms_page';
 
@@ -49,6 +50,7 @@ class DLab_Settings {
             self::OPT_CURRENCY_POSITION     => 'after',
             self::OPT_LISTING_PAGE          => 0,
             self::OPT_PASS_PAGE             => 0,
+            self::OPT_CHECKOUT_PAGE         => 0,
             self::OPT_GDPR_PAGE             => 0,
             self::OPT_TERMS_PAGE            => 0,
             self::OPT_BANK_ACCOUNT_NAME     => '',
@@ -150,6 +152,54 @@ class DLab_Settings {
             }
         }
         return home_url('/pass/');
+    }
+
+    public static function checkout_page_id() {
+        $opt = (int) get_option(self::OPT_CHECKOUT_PAGE, 0);
+        if ($opt) {
+            return $opt;
+        }
+        $ids = get_option('dlab_page_ids', array());
+        if (is_array($ids) && !empty($ids['checkout'])) {
+            return (int) $ids['checkout'];
+        }
+        return 0;
+    }
+
+    public static function checkout_page_url() {
+        $id = self::checkout_page_id();
+        if ($id) {
+            $url = get_permalink($id);
+            if ($url) {
+                return $url;
+            }
+        }
+        return home_url('/rezervace/');
+    }
+
+    public static function terms_page_id() {
+        return (int) get_option(self::OPT_TERMS_PAGE, 0);
+    }
+
+    public static function terms_page_url() {
+        $id = self::terms_page_id();
+        return $id ? (get_permalink($id) ?: '') : '';
+    }
+
+    public static function gdpr_page_id() {
+        return (int) get_option(self::OPT_GDPR_PAGE, 0);
+    }
+
+    public static function gdpr_page_url() {
+        $id = self::gdpr_page_id();
+        return $id ? (get_permalink($id) ?: '') : '';
+    }
+
+    public static function login_url($redirect = '') {
+        if (class_exists('EAB_Event') && method_exists('EAB_Event', 'get_login_url')) {
+            return EAB_Event::get_login_url($redirect);
+        }
+        return wp_login_url($redirect);
     }
 
     /**
@@ -265,6 +315,7 @@ class DLab_Settings {
             self::OPT_PASS_MIN_WORKSHOPS,
             self::OPT_LISTING_PAGE,
             self::OPT_PASS_PAGE,
+            self::OPT_CHECKOUT_PAGE,
             self::OPT_GDPR_PAGE,
             self::OPT_TERMS_PAGE,
         );

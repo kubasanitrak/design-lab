@@ -116,6 +116,15 @@ class DLab_Admin {
 
         $counts = wp_count_posts(DLab_Post_Types::POST_TYPE_WORKSHOP);
         $workshop_count = (is_object($counts) && isset($counts->publish)) ? (int) $counts->publish : 0;
+
+        $awaiting = 0;
+        if (DLab_DB::table_exists('dlab_orders')) {
+            global $wpdb;
+            $awaiting = (int) $wpdb->get_var(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}dlab_orders WHERE status = 'awaiting_payment'"
+            );
+        }
+
         include DLAB_PLUGIN_DIR . 'admin/partials/dashboard-page.php';
 
         if (!DLab_ACF::is_active()) {

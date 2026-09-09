@@ -6,7 +6,7 @@ Repository: https://github.com/kubasanitrak/design-lab
 
 Default language of strings in code is **Czech**. English WordPress installs load `languages/design-lab-en_US.mo`.
 
-## Shortcodes (Phase 2)
+## Shortcodes (Phase 4)
 
 | Shortcode | Usage |
 |-----------|--------|
@@ -16,6 +16,7 @@ Default language of strings in code is **Czech**. English WordPress installs loa
 | `[dlab_add_to_pass]` | Add-to-pass CTA — `id="123"` (guests allowed) |
 | `[dlab_basket_count]` | Header widget — link `Pass (N)` to `/pass/` |
 | `[dlab_pass]` | Pass recap / editor (activation creates `/pass/`) |
+| `[dlab_checkout]` | Reservation checkout + payment recap / QR (activation creates `/rezervace/`) |
 
 **URL filters** (GET): `dlab_vek`, `dlab_obor` (term slugs).
 
@@ -35,7 +36,7 @@ CPT singles live at `/design-lab/{slug}/`. The archive is off so `/design-lab/` 
 
 Lektorky use the theme CPT `instructor` (relationship field). Do not create a second instructor type.
 
-Pass rules: **2+ workshops**, **one attendee headcount for the whole pass**. Checkout, auth, and invoices come in later phases.
+Pass rules: **2+ workshops** for the discounted pass price; **one attendee headcount for the whole pass**. A single workshop can still be reserved at the list price. Checkout is bank transfer with QR platba.
 
 ## Composer
 
@@ -52,11 +53,11 @@ The main plugin file loads `vendor/autoload.php` when present.
 1. Bump `Version` and `DLAB_VERSION` in `design-lab.php`.
 2. Add a `## [x.y.z]` section to `CHANGELOG.md`.
 3. Commit and push to `main`.
-4. Create and push a matching tag (header `0.4.2` → tag `v0.4.2`):
+4. Create and push a matching tag (header `0.5.0` → tag `v0.5.0`):
 
 ```bash
-git tag v0.4.2
-git push origin v0.4.2
+git tag v0.5.0
+git push origin v0.5.0
 ```
 
 GitHub Actions builds `design-lab.zip` and publishes a GitHub Release. Installed sites check for updates via [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) (vendored under `lib/plugin-update-checker/`).

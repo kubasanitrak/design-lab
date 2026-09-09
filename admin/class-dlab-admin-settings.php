@@ -103,6 +103,55 @@ class DLab_Admin_Settings {
                             <p class="description"><?php esc_html_e('Stránka se shortcode [dlab_pass], obvykle /pass/.', 'design-lab'); ?></p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_checkout_page"><?php esc_html_e('Stránka rezervace', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <?php
+                            wp_dropdown_pages(array(
+                                'name'              => DLab_Settings::OPT_CHECKOUT_PAGE,
+                                'id'                => 'dlab_checkout_page',
+                                'selected'          => DLab_Settings::checkout_page_id(),
+                                'show_option_none'  => __('— vybrat —', 'design-lab'),
+                                'option_none_value' => '0',
+                            ));
+                            ?>
+                            <p class="description"><?php esc_html_e('Stránka se shortcode [dlab_checkout], obvykle /rezervace/.', 'design-lab'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_terms_page"><?php esc_html_e('Obchodní podmínky', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <?php
+                            wp_dropdown_pages(array(
+                                'name'              => DLab_Settings::OPT_TERMS_PAGE,
+                                'id'                => 'dlab_terms_page',
+                                'selected'          => DLab_Settings::terms_page_id(),
+                                'show_option_none'  => __('— vybrat —', 'design-lab'),
+                                'option_none_value' => '0',
+                            ));
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_gdpr_page"><?php esc_html_e('Ochrana osobních údajů', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <?php
+                            wp_dropdown_pages(array(
+                                'name'              => DLab_Settings::OPT_GDPR_PAGE,
+                                'id'                => 'dlab_gdpr_page',
+                                'selected'          => DLab_Settings::gdpr_page_id(),
+                                'show_option_none'  => __('— vybrat —', 'design-lab'),
+                                'option_none_value' => '0',
+                            ));
+                            ?>
+                        </td>
+                    </tr>
                 </table>
 
                 <h2><?php esc_html_e('Členský účet — rezervace', 'design-lab'); ?></h2>

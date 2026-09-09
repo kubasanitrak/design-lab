@@ -58,13 +58,19 @@
         if (count > 0) {
             if (!$continue.length) {
                 var listing = cfg.listing_url || '';
-                var $p = $('<p class="dlab-pass__continue"></p>');
+                var checkout = cfg.checkout_url || '';
+                var $p = $('<div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex dlab-pass__continue"></div>');
                 $p.append($('<a>', {
-                    class: 'btn dlab-btn',
+                    class: 'wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost',
                     href: listing,
                     text: i18n('add_workshop', 'Přidat další workshop')
                 }));
-                $pass.append($p);
+                $p.append($('<a>', {
+                    class: 'wp-block-button__link has-dd-white-color has-dd-black-background-color has-text-color has-background has-link-color btn dlab-btn',
+                    href: checkout,
+                    text: i18n('reserve', 'Rezervovat')
+                }));
+                $pass.find('[data-dlab-pass-body]').after($p);
             }
         } else {
             $continue.remove();
@@ -255,6 +261,84 @@
 
     $(document).on('change', '#dlab-pass-spots, .dlab-service-cb', function () {
         scheduleUpdate();
+    });
+
+    $(document).on('submit', '#dlab-checkout-form', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var $btn = $('#dlab-checkout-submit').prop('disabled', true);
+        var $notice = $('[data-dlab-checkout-notice]');
+        var attendees = [];
+        $form.find('input[name="attendees[]"]').each(function () {
+            attendees.push($(this).val());
+        });
+
+        post('dlab_process_checkout', {
+            contact_name: $form.find('[name="contact_name"]').val(),
+            contact_email: $form.find('[name="contact_email"]').val(),
+            contact_phone: $form.find('[name="contact_phone"]').val(),
+            attendees: JSON.stringify(attendees),
+            agree_terms: $form.find('[name="agree_terms"]').is(':checked') ? 1 : 0,
+            agree_gdpr: $form.find('[name="agree_gdpr"]').is(':checked') ? 1 : 0
+        }, function (data, err) {
+            $btn.prop('disabled', false);
+            if (err) {
+                var message = (err && err.message) ? err.message : i18n('error', 'Něco se pokazilo. Zkuste to znovu.');
+                if ($notice.length) {
+                    $notice.addClass('is-error').text(message).removeAttr('hidden');
+                } else {
+                    window.alert(message);
+                }
+                return;
+            }
+            if (data && data.redirect) {
+                window.location.href = data.redirect;
+            }
+        });
+    });
+
+    function fallbackCopy(text, done) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy');
+            done();
+        } catch (err) {
+            window.alert(text);
+        }
+        document.body.removeChild(ta);
+    }
+
+    $(document).on('click', '.dlab-copy-payment', function () {
+        var $btn = $(this);
+        var text = $btn.attr('data-copy') || '';
+        var copied = $btn.attr('data-copied') || i18n('copied', 'Zkopírováno');
+        var original = $btn.text();
+
+        if (!text) {
+            return;
+        }
+
+        function done() {
+            $btn.text(copied);
+            window.setTimeout(function () {
+                $btn.text(original);
+            }, 2000);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done).catch(function () {
+                fallbackCopy(text, done);
+            });
+            return;
+        }
+
+        fallbackCopy(text, done);
     });
 
     $(function () {

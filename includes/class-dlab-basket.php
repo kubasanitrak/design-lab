@@ -381,6 +381,42 @@ class DLab_Basket {
         return $spots;
     }
 
+    /**
+     * Empty the current owner's pass (after a successful reservation).
+     */
+    public function clear($owner = null) {
+        global $wpdb;
+
+        $owner = $owner ?: self::get_owner(false);
+        if ($owner['user_id'] === 0 && $owner['guest_token'] === '') {
+            return false;
+        }
+
+        if (DLab_DB::table_exists('dlab_basket')) {
+            $wpdb->delete(
+                $wpdb->prefix . 'dlab_basket',
+                array(
+                    'user_id'     => $owner['user_id'],
+                    'guest_token' => $owner['guest_token'],
+                ),
+                array('%d', '%s')
+            );
+        }
+
+        if (DLab_DB::table_exists('dlab_basket_meta')) {
+            $wpdb->delete(
+                $wpdb->prefix . 'dlab_basket_meta',
+                array(
+                    'user_id'     => $owner['user_id'],
+                    'guest_token' => $owner['guest_token'],
+                ),
+                array('%d', '%s')
+            );
+        }
+
+        return true;
+    }
+
     public function get_summary($owner = null) {
         $owner = $owner ?: self::get_owner(false);
         $items = $this->get_items($owner);

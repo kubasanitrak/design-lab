@@ -1,6 +1,7 @@
 <?php
 /**
  * @var int $workshop_count
+ * @var int $awaiting
  */
 
 if (!defined('ABSPATH')) {
@@ -15,11 +16,18 @@ if (!defined('ABSPATH')) {
             <strong><?php esc_html_e('Publikované workshopy', 'design-lab'); ?></strong>
             <p class="dlab-admin-card__value"><?php echo (int) $workshop_count; ?></p>
         </div>
+        <div class="dlab-admin-card">
+            <strong><?php esc_html_e('Čeká na platbu', 'design-lab'); ?></strong>
+            <p class="dlab-admin-card__value"><?php echo (int) $awaiting; ?></p>
+        </div>
     </div>
 
     <p>
         <a class="button button-primary" href="<?php echo esc_url(admin_url('edit.php?post_type=' . DLab_Post_Types::POST_TYPE_WORKSHOP)); ?>">
             <?php esc_html_e('Workshopy', 'design-lab'); ?>
+        </a>
+        <a class="button" href="<?php echo esc_url(admin_url('admin.php?page=dlab-orders')); ?>">
+            <?php esc_html_e('Rezervace', 'design-lab'); ?>
         </a>
         <a class="button" href="<?php echo esc_url(admin_url('admin.php?page=dlab-settings')); ?>">
             <?php esc_html_e('Nastavení', 'design-lab'); ?>
@@ -27,6 +35,6 @@ if (!defined('ABSPATH')) {
     </p>
 
     <p class="description">
-        <?php esc_html_e('Pass (košík) je aktivní. Registrace, platba a faktury přijdou v dalších fázích.', 'design-lab'); ?>
+        <?php esc_html_e('Rezervace a bankovní platba (QR) jsou aktivní. Členský účet a faktury přijdou v dalších fázích.', 'design-lab'); ?>
     </p>
 </div>
