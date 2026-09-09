@@ -42,7 +42,7 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
 
 
 <div data-theme="DD-beige" class="section section-full-width section-content--dilna section-padded" id="dlab-detail-<?php echo esc_attr((string) $post_id); ?>">
-    <div class="inner-content">
+    <!-- <div class="inner-content"> -->
         <div class="custom-columns">
             <div class="custom-columns--item custom-columns--item_major pad-B-0">
                 <a href="<?php echo esc_url($listing_url); ?>" class="back-to-parent h5">
@@ -50,11 +50,11 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
                 </a>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 <div data-theme="DD-beige" class="section scroll-trigger section-content scroll-trigger--cols section-content--dilna section-full-width">
-    <div class="inner-content">
+    <!-- <div class="inner-content"> -->
             <div class="custom-columns">
                 <div class="custom-columns--item custom-columns--item_major img-container--round-corners">
 <!-- IMG CAROUSEL -->                    
@@ -136,11 +136,11 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
 <!-- END ADD TO PASS BUTTON -->                    
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
-<div data-theme="DD-white" class="section scroll-trigger section-content scroll-trigger--cols section-content--dilna section-padded">
-    <div class="inner-content">
+<div data-theme="DD-white" class="section scroll-trigger section-content scroll-trigger--cols section-content--dilna section-full-width">
+    <!-- <div class="inner-content"> -->
         <div class="custom-columns">
     <!-- COLUMN LEFT -->
             <div class="custom-columns--item custom-columns--item_major">
@@ -240,13 +240,13 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
                 </div>
     <!-- END STICKY COLUMN -->
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 
 
-<div data-theme="DD-white" class="section scroll-trigger section-content scroll-trigger--cols section-content--dilna section-padded">
-    <div class="inner-content">
+<div data-theme="DD-white" class="section scroll-trigger section-content scroll-trigger--cols section-content--dilna section-full-width">
+    <!-- <div class="inner-content"> -->
         <div class="custom-columns">
             <div class="custom-columns--item custom-columns--item_major">
                 <?php if ($show_program && function_exists('have_rows') && have_rows('program_arr', $post_id)) : ?>
@@ -310,7 +310,7 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
                 <?php endif; ?>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 

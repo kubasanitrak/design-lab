@@ -26,7 +26,8 @@ $listing_url   = DLab_Settings::listing_page_url();
     </div>
 <?php else : ?>
     <div class="dlab-pass__spots">
-        <label class="caps h5" for="dlab-pass-spots"><?php esc_html_e('Počet účastníků', 'design-lab'); ?></label>
+        <label class="h4 wp-block-heading has-text-align-left" for="dlab-pass-spots"><strong><?php esc_html_e('Počet účastníků', 'design-lab'); ?></strong></label>
+        
         <p class="dlab-pass__spots-hint minor"><?php esc_html_e('Stejný počet platí pro všechny workshopy v passu.', 'design-lab'); ?></p>
         <div class="dlab-quantity">
             <input type="number" id="dlab-pass-spots" class="dlab-pass-spots" min="1" max="20" value="<?php echo esc_attr((string) $spots); ?>" inputmode="numeric">
@@ -51,9 +52,9 @@ $listing_url   = DLab_Settings::listing_page_url();
             <li class="dlab-pass-line" data-post-id="<?php echo esc_attr((string) $post_id); ?>">
                 <div class="dlab-pass-line__header">
                     <div>
-                        <h2 class="dlab-pass-line__title">
-                            <a href="<?php echo esc_url($item->permalink); ?>"><?php echo esc_html($item->post_title); ?></a>
-                        </h2>
+                        <h3 class="dlab-pass-line__title">
+                            <strong><a href="<?php echo esc_url($item->permalink); ?>"><?php echo esc_html($item->post_title); ?></a></strong>
+                        </h3>
                         <?php if (!empty($item->schedule)) : ?>
                             <p class="dlab-pass-line__schedule"><?php echo esc_html($item->schedule); ?></p>
                         <?php endif; ?>
@@ -126,7 +127,7 @@ $listing_url   = DLab_Settings::listing_page_url();
         <?php endif; ?>
 
         <p class="dlab-pass__row dlab-pass__row--total">
-            <span><?php esc_html_e('Celkem', 'design-lab'); ?></span>
+            <span class="h4 wp-block-heading has-text-align-left"><strong><?php esc_html_e('Celkem', 'design-lab'); ?></strong></span>
             <strong data-dlab-pass-total><?php echo esc_html($summary['total_formatted']); ?></strong>
         </p>
     </div>

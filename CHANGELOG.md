@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.2]
+
+- Pass page wrapped in theme dilna sections; detail sections use full-width layout.
+
 ## [0.4.1]
 
 - Card actions bar and pass button styling; detail CTA/tags tweaks; public CSS recompiled.
