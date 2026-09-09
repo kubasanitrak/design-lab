@@ -1,4 +1,3 @@
-@charset "UTF-8";
 .dlab-listing {
   padding-inline: var(--wrapper-padding-inline);
   padding-block: calc(var(--pad-T) * 2.666666);
@@ -133,11 +132,6 @@
 .dlab-detail__facts li {
   position: relative;
   padding-left: 1.25em;
-}
-.dlab-detail__facts li:before {
-  content: "•";
-  position: absolute;
-  left: 0;
 }
 .dlab-detail__tags {
   display: flex;

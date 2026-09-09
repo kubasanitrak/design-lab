@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.0]
+
+- Workshop detail rebuilt to match theme dilna sections (gallery, instructors, program table, sticky details); public CSS recompiled.
+
 ## [0.3.1]
 
 - Workshop card: age badge on the image, date in meta, compiled public CSS.
