@@ -109,6 +109,20 @@ class DLab_Workshop {
         return $date;
     }
 
+    /**
+     * Unix timestamp of workshop start (site timezone), or 0.
+     */
+    public static function get_start_timestamp($post_id) {
+        $date = self::get_workshop_date($post_id);
+        if ($date === '') {
+            return 0;
+        }
+        $time = self::get_time_from($post_id);
+        $raw  = $time !== '' ? trim($date . ' ' . $time) : $date;
+        $ts   = strtotime($raw);
+        return $ts ? (int) $ts : 0;
+    }
+
     public static function format_date($value) {
         if ($value === '' || $value === null) {
             return '';

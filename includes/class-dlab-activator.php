@@ -12,12 +12,14 @@ class DLab_Activator {
     public static function activate() {
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-settings.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-post-types.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-roles.php';
 
         $post_types = new DLab_Post_Types();
         $post_types->register_post_types();
         $post_types->register_taxonomies();
         DLab_Post_Types::seed_default_terms();
 
+        DLab_Roles::register_role();
         DLab_Settings::ensure_defaults();
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-db.php';
         DLab_DB::create_tables();
@@ -49,6 +51,16 @@ class DLab_Activator {
                 'title'   => __('Rezervace', 'design-lab'),
                 'slug'    => 'rezervace',
                 'content' => '[dlab_checkout]',
+            ),
+            'set_password' => array(
+                'title'   => __('Nastavení hesla', 'design-lab'),
+                'slug'    => 'nastaveni-hesla-design-lab',
+                'content' => '[dlab_set_password]',
+            ),
+            'dashboard' => array(
+                'title'   => __('Můj účet', 'design-lab'),
+                'slug'    => 'muj-ucet-design-lab',
+                'content' => '[dlab_dashboard]',
             ),
         );
 
@@ -97,7 +109,7 @@ class DLab_Activator {
         if (!is_array($ids)) {
             $ids = array();
         }
-        foreach (array('listing', 'pass', 'checkout') as $key) {
+        foreach (array('listing', 'pass', 'checkout', 'set_password', 'dashboard') as $key) {
             if (empty($ids[$key]) || !get_post($ids[$key])) {
                 self::create_pages();
                 flush_rewrite_rules();

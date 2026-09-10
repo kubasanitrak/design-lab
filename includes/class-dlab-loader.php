@@ -26,7 +26,10 @@ class DLab_Loader {
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-basket.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-qr.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-emails.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-roles.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-auth.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-checkout.php';
+        require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-dashboard.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-cron.php';
         require_once DLAB_PLUGIN_DIR . 'includes/class-dlab-shortcodes.php';
 
@@ -46,9 +49,12 @@ class DLab_Loader {
 
         new DLab_Post_Types();
         new DLab_Settings();
+        new DLab_Roles();
+        new DLab_Auth();
         new DLab_Capacity();
         new DLab_Basket();
         new DLab_Checkout();
+        new DLab_Dashboard();
         new DLab_Cron();
         DLab_Cron::schedule();
         new DLab_Shortcodes();

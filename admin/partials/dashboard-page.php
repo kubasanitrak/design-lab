@@ -35,6 +35,6 @@ if (!defined('ABSPATH')) {
     </p>
 
     <p class="description">
-        <?php esc_html_e('Rezervace a bankovní platba (QR) jsou aktivní. Členský účet a faktury přijdou v dalších fázích.', 'design-lab'); ?>
+        <?php esc_html_e('Rezervace, členský účet a bankovní platba (QR) jsou aktivní. Faktury přijdou v dalších fázích.', 'design-lab'); ?>
     </p>
 </div>

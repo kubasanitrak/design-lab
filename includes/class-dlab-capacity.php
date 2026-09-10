@@ -142,11 +142,15 @@ class DLab_Capacity {
      *
      * @param string[] $attendee_names
      */
-    public static function create_holds_from_line($order_id, $order_item_id, $object_id, $object_type, $user_id, $spots, $spot_type, array $attendee_names = array()) {
+    public static function create_holds_from_line($order_id, $order_item_id, $object_id, $object_type, $user_id, $spots, $spot_type, array $attendee_names = array(), $status = null) {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'dlab_booking_spots';
-        $spots = max(1, (int) $spots);
+        $table  = $wpdb->prefix . 'dlab_booking_spots';
+        $spots  = max(1, (int) $spots);
+        $status = $status ?: self::STATUS_HELD;
+        if (!in_array($status, array(self::STATUS_HELD, self::STATUS_CONFIRMED), true)) {
+            $status = self::STATUS_HELD;
+        }
 
         for ($i = 0; $i < $spots; $i++) {
             $name = isset($attendee_names[$i]) ? (string) $attendee_names[$i] : '';
@@ -159,7 +163,7 @@ class DLab_Capacity {
                     'object_type'    => $object_type,
                     'user_id'        => (int) $user_id,
                     'spot_type'      => $spot_type,
-                    'status'         => self::STATUS_HELD,
+                    'status'         => $status,
                     'attendee_index' => $i,
                     'attendee_data'  => wp_json_encode(array('name' => $name)),
                     'created_at'     => current_time('mysql'),
@@ -196,6 +200,22 @@ class DLab_Capacity {
             $wpdb->prefix . 'dlab_booking_spots',
             array('status' => self::STATUS_CANCELLED),
             array('order_id' => (int) $order_id),
+            array('%s'),
+            array('%d')
+        );
+    }
+
+    public static function release_item_spots($order_item_id) {
+        global $wpdb;
+
+        if (!DLab_DB::table_exists('dlab_booking_spots')) {
+            return;
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'dlab_booking_spots',
+            array('status' => self::STATUS_CANCELLED),
+            array('order_item_id' => (int) $order_item_id),
             array('%s'),
             array('%d')
         );

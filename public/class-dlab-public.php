@@ -57,6 +57,8 @@ class DLab_Public {
             'dlab_basket_count',
             'dlab_pass',
             'dlab_checkout',
+            'dlab_set_password',
+            'dlab_dashboard',
         );
         foreach ($tags as $tag) {
             if (has_shortcode($post->post_content, $tag)) {
@@ -96,15 +98,20 @@ class DLab_Public {
             'in_pass'      => DLab_Basket::current_in_pass_ids(),
             'count'        => DLab_Basket::current_count(),
             'i18n'         => array(
-                'add_to_pass'  => __('Přidat do passu', 'design-lab'),
-                'in_pass'      => __('V passu', 'design-lab'),
-                'pass_count'   => __('Pass (%d)', 'design-lab'),
-                'add_workshop' => __('Přidat další workshop', 'design-lab'),
-                'reserve'      => __('Rezervovat', 'design-lab'),
-                'added'        => __('Přidáno do passu.', 'design-lab'),
-                'removed'      => __('Odebráno z passu.', 'design-lab'),
-                'copied'       => __('Zkopírováno', 'design-lab'),
-                'error'        => __('Něco se pokazilo. Zkuste to znovu.', 'design-lab'),
+                'add_to_pass'       => __('Přidat do passu', 'design-lab'),
+                'in_pass'           => __('V passu', 'design-lab'),
+                'pass_count'        => __('Pass (%d)', 'design-lab'),
+                'add_workshop'      => __('Přidat další workshop', 'design-lab'),
+                'reserve'           => __('Rezervovat', 'design-lab'),
+                'added'             => __('Přidáno do passu.', 'design-lab'),
+                'removed'           => __('Odebráno z passu.', 'design-lab'),
+                'copied'            => __('Zkopírováno', 'design-lab'),
+                'error'             => __('Něco se pokazilo. Zkuste to znovu.', 'design-lab'),
+                'login'             => __('Přihlásit se', 'design-lab'),
+                'confirm_cancel'    => __('Opravdu chcete zrušit celou rezervaci?', 'design-lab'),
+                'no_workshops'      => __('Žádný vhodný workshop k přesunu.', 'design-lab'),
+                'pick_workshop'     => __('Vyberte workshop', 'design-lab'),
+                'confirm_reschedule'=> __('Opravdu přesunout na vybraný workshop?', 'design-lab'),
             ),
         ));
     }

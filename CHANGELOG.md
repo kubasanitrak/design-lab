@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.0]
+
+- Member accounts: checkout requires login or register-on-submit, verification e-mail → set password, role `dlab_member`.
+- Member dashboard `/muj-ucet-design-lab/`: account settings (editable e-mail, phone, lost-password link), bookings overview, cancel whole order, reschedule workshop (pass pricing recalculated).
+
 ## [0.5.0]
 
 - Phase 4: book a single workshop or a pass from `/pass/` via **Rezervovat**, checkout at `/rezervace/`, reservation holds, bank-transfer recap and Paylibo QR, emails, admin reservation list.

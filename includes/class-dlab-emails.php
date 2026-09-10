@@ -9,6 +9,32 @@ if (!defined('ABSPATH')) {
 
 class DLab_Emails {
 
+    public static function send_verification_email($user_id, $token) {
+        $user = get_userdata($user_id);
+        if (!$user) {
+            return false;
+        }
+
+        $url  = DLab_Auth::get_verification_url($user_id, $token);
+        $blog = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
+
+        $subject = sprintf(
+            /* translators: %s: site name */
+            __('[%s] Ověření registrace – Design Lab', 'design-lab'),
+            $blog
+        );
+
+        $body = sprintf(
+            /* translators: 1: display name, 2: site name, 3: verification url */
+            __("Dobrý den %1\$s,\n\npro dokončení registrace na %2\$s (Design Lab) klikněte na odkaz:\n\n%3\$s\n\nPo ověření si nastavíte heslo.\n\nPokud jste se neregistrovali, tento e-mail ignorujte.\n", 'design-lab'),
+            $user->display_name,
+            $blog,
+            $url
+        );
+
+        return self::mail($user->user_email, $subject, $body);
+    }
+
     public static function send_order_placed_email($order_id) {
         $order = DLab_Checkout::get_order($order_id);
         if (!$order) {

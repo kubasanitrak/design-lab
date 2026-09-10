@@ -196,10 +196,30 @@ class DLab_Settings {
     }
 
     public static function login_url($redirect = '') {
-        if (class_exists('EAB_Event') && method_exists('EAB_Event', 'get_login_url')) {
-            return EAB_Event::get_login_url($redirect);
+        if (class_exists('DLab_Auth')) {
+            return DLab_Auth::build_wp_login_url($redirect);
         }
         return wp_login_url($redirect);
+    }
+
+    public static function dashboard_page_url() {
+        if (class_exists('DLab_Auth')) {
+            $url = DLab_Auth::get_page_url('dashboard');
+            if ($url) {
+                return $url;
+            }
+        }
+        return home_url('/muj-ucet-design-lab/');
+    }
+
+    public static function set_password_page_url() {
+        if (class_exists('DLab_Auth')) {
+            $url = DLab_Auth::get_page_url('set_password');
+            if ($url) {
+                return $url;
+            }
+        }
+        return home_url('/nastaveni-hesla-design-lab/');
     }
 
     /**

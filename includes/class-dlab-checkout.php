@@ -62,14 +62,23 @@ class DLab_Checkout {
         $user        = is_user_logged_in() ? wp_get_current_user() : null;
         $terms_page  = DLab_Settings::terms_page_id();
         $gdpr_page   = DLab_Settings::gdpr_page_id();
-        $contact     = array(
+        $phone_meta  = '';
+        if ($user) {
+            $phone_meta = (string) get_user_meta($user->ID, DLab_Auth::META_PHONE, true);
+            if ($phone_meta === '') {
+                $phone_meta = (string) get_user_meta($user->ID, 'billing_phone', true);
+            }
+        }
+        $contact = array(
             'name'  => $user ? trim($user->first_name . ' ' . $user->last_name) : '',
             'email' => $user ? (string) $user->user_email : '',
-            'phone' => $user ? (string) get_user_meta($user->ID, 'billing_phone', true) : '',
+            'phone' => $phone_meta,
         );
         if ($contact['name'] === '' && $user) {
             $contact['name'] = (string) $user->display_name;
         }
+        $login_url = DLab_Settings::login_url(DLab_Settings::checkout_page_url());
+        $is_logged_in = (bool) $user;
 
         ob_start();
         include DLAB_PLUGIN_DIR . 'public/partials/checkout-page.php';
@@ -104,7 +113,22 @@ class DLab_Checkout {
             wp_send_json_error(array('message' => __('Souhlaste se zpracováním osobních údajů.', 'design-lab')));
         }
 
-        $order_id = self::create_order($contact);
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            $created = DLab_Auth::register_member_from_contact($contact, !$gdpr_page || !empty($_POST['agree_gdpr']));
+            if (is_wp_error($created)) {
+                $payload = array('message' => $created->get_error_message());
+                if ($created->get_error_code() === 'email_exists') {
+                    $payload['login_url'] = DLab_Settings::login_url(DLab_Settings::checkout_page_url());
+                }
+                wp_send_json_error($payload);
+            }
+            $user_id = (int) $created;
+        } else {
+            $this->sync_logged_in_profile($user_id, $contact);
+        }
+
+        $order_id = self::create_order($contact, $user_id);
         if (is_wp_error($order_id)) {
             wp_send_json_error(array('message' => $order_id->get_error_message()));
         }
@@ -115,8 +139,35 @@ class DLab_Checkout {
         DLab_Emails::send_order_placed_email($order_id);
         $order = self::get_order($order_id);
 
-        wp_send_json_success(array(
+        $payload = array(
             'redirect' => self::payment_url($order),
+        );
+        if (!is_user_logged_in()) {
+            $payload['account_created'] = true;
+            $payload['message']         = __('Rezervace vytvořena. Na e-mail jsme poslali ověřovací odkaz pro nastavení hesla.', 'design-lab');
+        }
+
+        wp_send_json_success($payload);
+    }
+
+    /**
+     * Keep member profile in sync when a logged-in user checks out.
+     */
+    private function sync_logged_in_profile($user_id, array $contact) {
+        $name  = $contact['name'];
+        $phone = $contact['phone'];
+        $parts = preg_split('/\s+/', trim($name), 2);
+        $first = $parts[0];
+        $last  = isset($parts[1]) ? $parts[1] : '';
+
+        update_user_meta($user_id, DLab_Auth::META_FIRST_NAME, $first);
+        update_user_meta($user_id, DLab_Auth::META_LAST_NAME, $last);
+        update_user_meta($user_id, DLab_Auth::META_PHONE, $phone);
+        wp_update_user(array(
+            'ID'           => $user_id,
+            'first_name'   => $first,
+            'last_name'    => $last,
+            'display_name' => $name,
         ));
     }
 
@@ -164,10 +215,11 @@ class DLab_Checkout {
     }
 
     /**
-     * @param array $contact
+     * @param array    $contact
+     * @param int|null $force_user_id Override basket owner user_id (required for new accounts).
      * @return int|WP_Error
      */
-    public static function create_order(array $contact) {
+    public static function create_order(array $contact, $force_user_id = null) {
         global $wpdb;
 
         $basket = DLab_Basket::instance();
@@ -201,14 +253,19 @@ class DLab_Checkout {
             }
         }
 
-        $owner        = DLab_Basket::get_owner(false);
+        $owner = DLab_Basket::get_owner(false);
+        $order_user_id = $force_user_id !== null ? (int) $force_user_id : (int) $owner['user_id'];
+        if ($order_user_id <= 0) {
+            return new WP_Error('dlab_account', __('Rezervace vyžaduje uživatelský účet.', 'design-lab'));
+        }
+
         $order_number = DLab_Settings::next_invoice_number();
         $access_token = wp_generate_password(32, false, false);
         $hours        = DLab_Settings::reservation_expiry_hours();
         $expires_at   = wp_date('Y-m-d H:i:s', time() + ($hours * HOUR_IN_SECONDS));
 
         $insert = array(
-            'user_id'        => $owner['user_id'],
+            'user_id'        => $order_user_id,
             'guest_token'    => $owner['guest_token'],
             'access_token'   => $access_token,
             'order_number'   => $order_number,
@@ -266,7 +323,7 @@ class DLab_Checkout {
                 (int) $wpdb->insert_id,
                 (int) $item->object_id,
                 $item->object_type,
-                $owner['user_id'],
+                $order_user_id,
                 $spots,
                 $spot_type,
                 $attendees
@@ -444,6 +501,214 @@ class DLab_Checkout {
             'failed'           => __('Neúspěšné', 'design-lab'),
         );
         return isset($labels[$status]) ? $labels[$status] : $status;
+    }
+
+    /**
+     * Replace one workshop line with another; recalculate pass pricing.
+     *
+     * @return true|WP_Error
+     */
+    public static function reschedule_order_item($order_id, $item_id, $new_workshop_id) {
+        global $wpdb;
+
+        $order_id         = (int) $order_id;
+        $item_id          = (int) $item_id;
+        $new_workshop_id  = (int) $new_workshop_id;
+        $order            = self::get_order($order_id);
+
+        if (!$order || in_array($order->status, array('cancelled', 'expired', 'failed'), true)) {
+            return new WP_Error('dlab_reschedule', __('Tuto rezervaci nelze přesunout.', 'design-lab'));
+        }
+
+        if (!DLab_Basket::can_add_post($new_workshop_id)) {
+            return new WP_Error('dlab_closed', __('Vybraný workshop nelze rezervovat.', 'design-lab'));
+        }
+
+        $line = null;
+        foreach ($order->items as $candidate) {
+            if ((int) $candidate->id === $item_id) {
+                $line = $candidate;
+                break;
+            }
+        }
+        if (!$line) {
+            return new WP_Error('dlab_reschedule', __('Položka rezervace nebyla nalezena.', 'design-lab'));
+        }
+
+        if ((int) $line->object_id === $new_workshop_id) {
+            return new WP_Error('dlab_reschedule', __('Vyberte jiný workshop.', 'design-lab'));
+        }
+
+        foreach ($order->items as $other) {
+            if ((int) $other->id !== $item_id && (int) $other->object_id === $new_workshop_id) {
+                return new WP_Error('dlab_reschedule', __('Tento workshop už v rezervaci je.', 'design-lab'));
+            }
+        }
+
+        $spots = max(1, (int) $order->spots);
+        // Temporarily ignore current line capacity when checking the new workshop.
+        DLab_Capacity::release_item_spots($item_id);
+
+        $capacity = DLab_Capacity::can_reserve($new_workshop_id, $spots);
+        if (is_wp_error($capacity)) {
+            // Restore by re-creating holds for the old workshop if possible.
+            $old_type = $line->line_meta['spot_type'] ?? DLab_Capacity::SPOT_REGULAR;
+            $old_cap  = DLab_Capacity::can_reserve((int) $line->object_id, $spots);
+            if (!is_wp_error($old_cap)) {
+                $old_type = $old_cap['spot_type'];
+            }
+            $contact   = self::contact_from_order($order);
+            $attendees = $contact['attendees'];
+            $spot_status = $order->status === 'paid' ? DLab_Capacity::STATUS_CONFIRMED : DLab_Capacity::STATUS_HELD;
+            DLab_Capacity::create_holds_from_line(
+                $order_id,
+                $item_id,
+                (int) $line->object_id,
+                $line->object_type,
+                (int) $order->user_id,
+                $spots,
+                $old_type,
+                $attendees,
+                $spot_status
+            );
+            return $capacity;
+        }
+
+        $line_meta = is_array($line->line_meta) ? $line->line_meta : array();
+        $line_meta['spot_type'] = $capacity['spot_type'];
+        $line_meta['services']  = array(); // services are workshop-specific
+
+        $object_type = get_post_type($new_workshop_id) ?: DLab_Post_Types::POST_TYPE_WORKSHOP;
+
+        $wpdb->update(
+            $wpdb->prefix . 'dlab_order_items',
+            array(
+                'object_id'   => $new_workshop_id,
+                'object_type' => $object_type,
+                'line_meta'   => wp_json_encode($line_meta),
+            ),
+            array('id' => $item_id),
+            array('%d', '%s', '%s'),
+            array('%d')
+        );
+
+        $contact   = self::contact_from_order($order);
+        $attendees = $contact['attendees'];
+        $spot_status = $order->status === 'paid' ? DLab_Capacity::STATUS_CONFIRMED : DLab_Capacity::STATUS_HELD;
+        DLab_Capacity::create_holds_from_line(
+            $order_id,
+            $item_id,
+            $new_workshop_id,
+            $object_type,
+            (int) $order->user_id,
+            $spots,
+            $capacity['spot_type'],
+            $attendees,
+            $spot_status
+        );
+
+        self::recalculate_order_pricing($order_id);
+
+        return true;
+    }
+
+    /**
+     * Recalculate line and order totals after a line change (pass rules).
+     */
+    public static function recalculate_order_pricing($order_id) {
+        global $wpdb;
+
+        $order = self::get_order($order_id);
+        if (!$order || empty($order->items)) {
+            return;
+        }
+
+        $pseudo = array();
+        foreach ($order->items as $item) {
+            $obj          = new stdClass();
+            $obj->object_id = (int) $item->object_id;
+            $obj->line_meta = is_array($item->line_meta) ? $item->line_meta : array();
+            $pseudo[]       = $obj;
+        }
+
+        $pricing = DLab_Pricing::calculate_pass($pseudo, (int) $order->spots);
+        $items_table = $wpdb->prefix . 'dlab_order_items';
+
+        foreach ($order->items as $index => $item) {
+            $line = isset($pricing['lines'][$index]) ? $pricing['lines'][$index] : null;
+            if (!$line) {
+                continue;
+            }
+            $wpdb->update(
+                $items_table,
+                array(
+                    'unit_price' => (float) $line['unit'],
+                    'line_total' => (float) $line['line_total'],
+                ),
+                array('id' => (int) $item->id),
+                array('%f', '%f'),
+                array('%d')
+            );
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'dlab_orders',
+            array(
+                'total'      => (float) $pricing['total'],
+                'discount'   => (float) $pricing['discount'],
+                'updated_at' => current_time('mysql'),
+            ),
+            array('id' => (int) $order_id),
+            array('%f', '%f', '%s'),
+            array('%d')
+        );
+    }
+
+    /**
+     * Workshops available to swap into an order line.
+     *
+     * @return array<int,array{id:int,title:string,schedule:string}>
+     */
+    public static function get_reschedule_options($order_id, $item_id) {
+        $order = self::get_order($order_id);
+        if (!$order) {
+            return array();
+        }
+
+        $exclude = array();
+        foreach ($order->items as $item) {
+            $exclude[] = (int) $item->object_id;
+        }
+
+        $spots = max(1, (int) $order->spots);
+        $q     = new WP_Query(array(
+            'post_type'      => DLab_Post_Types::POST_TYPE_WORKSHOP,
+            'post_status'    => 'publish',
+            'posts_per_page' => 100,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'post__not_in'   => $exclude,
+        ));
+
+        $options = array();
+        foreach ($q->posts as $post) {
+            if (!DLab_Basket::can_add_post($post->ID)) {
+                continue;
+            }
+            $cap = DLab_Capacity::can_reserve($post->ID, $spots);
+            if (is_wp_error($cap)) {
+                // Still list if current item's spots would free capacity — checked at submit.
+                // Skip clearly full workshops for UX.
+                continue;
+            }
+            $options[] = array(
+                'id'       => (int) $post->ID,
+                'title'    => get_the_title($post),
+                'schedule' => DLab_Workshop::get_schedule_summary($post->ID),
+            );
+        }
+
+        return $options;
     }
 
     private function render_transfer_info($order) {

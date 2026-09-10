@@ -284,8 +284,15 @@
             $btn.prop('disabled', false);
             if (err) {
                 var message = (err && err.message) ? err.message : i18n('error', 'Něco se pokazilo. Zkuste to znovu.');
+                if (err && err.login_url) {
+                    message += ' ';
+                }
                 if ($notice.length) {
-                    $notice.addClass('is-error').text(message).removeAttr('hidden');
+                    $notice.addClass('is-error').html(
+                        err && err.login_url
+                            ? (message + ' <a class="textlink textlink-underline" href="' + err.login_url + '">' + i18n('login', 'Přihlásit se') + '</a>')
+                            : message
+                    ).removeAttr('hidden');
                 } else {
                     window.alert(message);
                 }
@@ -341,8 +348,183 @@
         fallbackCopy(text, done);
     });
 
+    function initDashboard() {
+        var $root = $('[data-dlab-dashboard]');
+        if (!$root.length) {
+            return;
+        }
+
+        var $panels = $root.find('.dlab-dashboard__panel');
+        var confirmCancel = i18n('confirm_cancel', 'Opravdu chcete zrušit celou rezervaci?');
+        var confirmReschedule = i18n('confirm_reschedule', 'Opravdu přesunout na vybraný workshop?');
+
+        function normalizeTarget(target) {
+            if (!target || target === 'overview') {
+                return 'overview';
+            }
+            return String(target).replace(/^#/, '');
+        }
+
+        function showPanel(target, pushHash) {
+            var id = normalizeTarget(target);
+            var $match = $panels.filter('[data-panel="' + id + '"]');
+            if (!$match.length) {
+                id = 'overview';
+                $match = $panels.filter('[data-panel="overview"]');
+            }
+
+            $panels.removeClass('is-active').attr('aria-hidden', 'true');
+            $match.addClass('is-active').attr('aria-hidden', 'false');
+
+            if (pushHash !== false) {
+                var hash = id === 'overview' ? '' : '#' + id;
+                if (window.location.hash !== hash) {
+                    if (hash) {
+                        window.history.pushState({ dlabDashboard: id }, '', hash);
+                    } else if (window.location.hash) {
+                        window.history.pushState({ dlabDashboard: id }, '', window.location.pathname + window.location.search);
+                    }
+                }
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function panelFromHash() {
+            var hash = window.location.hash.replace(/^#/, '');
+            return hash || 'overview';
+        }
+
+        $root.on('click', '[data-dlab-dashboard-go]', function (e) {
+            e.preventDefault();
+            showPanel($(this).data('dlab-dashboard-go'));
+        });
+
+        $root.on('click', '[data-dlab-dashboard-cancel]', function () {
+            if (!window.confirm(confirmCancel)) {
+                return;
+            }
+
+            var $panel = $(this).closest('.dlab-dashboard__panel');
+            var orderId = $panel.data('order-id');
+            var $btn = $(this).prop('disabled', true);
+
+            post('dlab_dashboard_cancel_order', {
+                order_id: orderId
+            }, function (data, err) {
+                $btn.prop('disabled', false);
+                if (err && err.message) {
+                    window.alert(err.message);
+                    return;
+                }
+                if (data && data.message) {
+                    window.alert(data.message);
+                }
+                window.location.hash = 'bookings';
+                window.location.reload();
+            });
+        });
+
+        $root.on('click', '[data-dlab-dashboard-reschedule]', function () {
+            var $panel = $(this).closest('.dlab-dashboard__panel');
+            var $box = $panel.find('[data-dlab-reschedule-box]').removeAttr('hidden');
+            var $select = $box.find('[data-dlab-reschedule-select]').prop('disabled', true);
+            var $confirm = $box.find('[data-dlab-reschedule-confirm]').prop('disabled', true);
+            var orderId = $panel.data('order-id');
+            var itemId = $panel.data('item-id');
+
+            $select.html('<option value="">' + i18n('pick_workshop', 'Vyberte workshop') + '</option>');
+
+            post('dlab_dashboard_reschedule_options', {
+                order_id: orderId,
+                item_id: itemId
+            }, function (data, err) {
+                $select.prop('disabled', false);
+                if (err && err.message) {
+                    window.alert(err.message);
+                    $box.attr('hidden', true);
+                    return;
+                }
+                var options = (data && data.options) ? data.options : [];
+                if (!options.length) {
+                    $select.html('<option value="">' + i18n('no_workshops', 'Žádný vhodný workshop k přesunu.') + '</option>');
+                    return;
+                }
+                options.forEach(function (opt) {
+                    var label = opt.title + (opt.schedule ? ' — ' + opt.schedule : '');
+                    $select.append($('<option>', { value: opt.id, text: label }));
+                });
+                $confirm.prop('disabled', false);
+            });
+        });
+
+        $root.on('click', '[data-dlab-reschedule-confirm]', function () {
+            var $panel = $(this).closest('.dlab-dashboard__panel');
+            var workshopId = parseInt($panel.find('[data-dlab-reschedule-select]').val(), 10);
+            if (!workshopId) {
+                return;
+            }
+            if (!window.confirm(confirmReschedule)) {
+                return;
+            }
+
+            var $btn = $(this).prop('disabled', true);
+            post('dlab_dashboard_reschedule', {
+                order_id: $panel.data('order-id'),
+                item_id: $panel.data('item-id'),
+                workshop_id: workshopId
+            }, function (data, err) {
+                $btn.prop('disabled', false);
+                if (err && err.message) {
+                    window.alert(err.message);
+                    return;
+                }
+                if (data && data.message) {
+                    window.alert(data.message);
+                }
+                window.location.hash = 'bookings';
+                window.location.reload();
+            });
+        });
+
+        $root.on('submit', '[data-dlab-dashboard-settings]', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $notice = $root.find('[data-dlab-settings-notice]');
+            var $submit = $form.find('[type="submit"]').prop('disabled', true);
+
+            post('dlab_dashboard_save_profile', {
+                first_name: $form.find('[name="first_name"]').val(),
+                last_name: $form.find('[name="last_name"]').val(),
+                email: $form.find('[name="email"]').val(),
+                phone: $form.find('[name="phone"]').val()
+            }, function (data, err) {
+                $submit.prop('disabled', false);
+                if (err && err.message) {
+                    $notice.removeClass('dlab-dashboard__notice--hidden dlab-dashboard__notice--success')
+                        .addClass('dlab-dashboard__notice--error')
+                        .text(err.message);
+                    return;
+                }
+                if (data && data.full_name) {
+                    $root.find('[data-dlab-dashboard-name]').text(data.full_name);
+                }
+                $notice.removeClass('dlab-dashboard__notice--hidden dlab-dashboard__notice--error')
+                    .addClass('dlab-dashboard__notice--success')
+                    .text((data && data.message) ? data.message : 'Uloženo.');
+            });
+        });
+
+        window.addEventListener('popstate', function () {
+            showPanel(panelFromHash(), false);
+        });
+
+        showPanel(panelFromHash(), false);
+    }
+
     $(function () {
         initQuantitySpinners();
+        initDashboard();
         if (cfg.in_pass) {
             syncPassActions(cfg.in_pass);
         }
