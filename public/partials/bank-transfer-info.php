@@ -18,45 +18,50 @@ if (!defined('ABSPATH')) {
 
 $listing_url = DLab_Settings::listing_page_url();
 ?>
-<div data-theme="DD-beige" class="section scroll-trigger section-content section-content--dilna section-full-width pad-B-4 dlab-bank-transfer" id="dlab-bank-transfer">
+<div data-theme="DD-white" class="section scroll-trigger section-content section-full-width">
+    <div class="inner-content">
+        <h1 class="wp-block-heading has-text-align-center"><strong><?php esc_html_e('Platební instrukce', 'design-lab'); ?></strong></h1>
+    </div>
+</div>
+
+<div data-theme="DD-white" class="section scroll-trigger section-content section-content--dilna section-full-width pad-B-4 dlab-bank-transfer" id="dlab-bank-transfer">
     <div class="inner-content">
         <div class="wp-block-group single-col single-col--narrow">
             <div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
-                <h1 class="wp-block-heading has-text-align-center"><strong><?php esc_html_e('Platební instrukce', 'design-lab'); ?></strong></h1>
                 <?php if (in_array($order->status, array('cancelled', 'expired', 'failed'), true)) : ?>
-                    <p class="dlab-checkout__notice is-error">
+                    <h4 class="dlab-checkout__notice is-error">
                         <?php echo esc_html(sprintf(
                             /* translators: %s: status label */
                             __('Tato rezervace už není aktivní (%s).', 'design-lab'),
                             DLab_Checkout::status_label($order->status)
                         )); ?>
-                    </p>
+                    </h4>
                 <?php elseif ($order->status === 'paid') : ?>
-                    <p class="dlab-bank-transfer__hold">
+                    <h4 class="dlab-bank-transfer__hold">
                         <?php esc_html_e('Platba byla přijata. Rezervace je potvrzena.', 'design-lab'); ?>
-                    </p>
+                    </h4>
                 <?php else : ?>
-                    <p class="dlab-bank-transfer__hold">
+                    <h4 class="dlab-bank-transfer__hold">
                         <?php esc_html_e('Místo držíme. Jakmile platbu přijmeme, pošleme potvrzení.', 'design-lab'); ?>
-                    </p>
+                    </h4>
                 <?php endif; ?>
 
-                <p><strong><?php esc_html_e('Číslo rezervace:', 'design-lab'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
-                <p><strong><?php esc_html_e('Částka:', 'design-lab'); ?></strong> <?php echo esc_html(DLab_Workshop::format_price($order->total)); ?></p>
+                <h4><strong><?php esc_html_e('Číslo rezervace:', 'design-lab'); ?></strong> <?php echo esc_html($order->order_number); ?></h4>
+                <h4><strong><?php esc_html_e('Částka:', 'design-lab'); ?></strong> <?php echo esc_html(DLab_Workshop::format_price($order->total)); ?></h4>
 
                 <?php if (!empty($order->items)) : ?>
-                    <ul class="dlab-pass__list dlab-checkout__list">
+                    <ul class="dlab-pass__list dlab-checkout__list mar-T-1">
                         <?php foreach ($order->items as $item) : ?>
                             <li class="dlab-pass-line">
                                 <div class="dlab-pass-line__header">
                                     <div>
                                         <h3 class="dlab-pass-line__title"><strong><?php echo esc_html($item->post_title); ?></strong></h3>
                                         <?php if (!empty($item->schedule)) : ?>
-                                            <p class="dlab-pass-line__schedule"><?php echo esc_html($item->schedule); ?></p>
+                                            <h4 class="dlab-pass-line__schedule"><?php echo esc_html($item->schedule); ?></h4>
                                         <?php endif; ?>
                                     </div>
                                     <div class="dlab-pass-line__price">
-                                        <strong><?php echo esc_html(DLab_Workshop::format_price($item->line_total)); ?></strong>
+                                        <h4><strong><?php echo esc_html(DLab_Workshop::format_price($item->line_total)); ?></strong></h4>
                                     </div>
                                 </div>
                             </li>
@@ -87,16 +92,16 @@ $listing_url = DLab_Settings::listing_page_url();
                         </table>
 
                         <?php if ($order->status !== 'paid') : ?>
-                            <p class="dlab-bank-transfer__actions">
+                            <div class="dlab-bank-transfer__actions mar-T-1">
                                 <button
                                     type="button"
-                                    class="btn dlab-btn dlab-copy-payment"
+                                    class="btn dlab-btn dlab-copy-payment wp-block-button__link has-dd-white-color has-dd-black-background-color has-text-color has-background"
                                     data-copy="<?php echo esc_attr($copy_payload); ?>"
                                     data-copied="<?php echo esc_attr__('Zkopírováno', 'design-lab'); ?>"
                                 >
                                     <?php esc_html_e('Zkopírovat platební údaje', 'design-lab'); ?>
                                 </button>
-                            </p>
+                            </div>
                         <?php endif; ?>
                     </div>
 
@@ -120,16 +125,16 @@ $listing_url = DLab_Settings::listing_page_url();
                 </div>
 
                 <?php if ($order->status !== 'paid' && !empty($order->expires_at)) : ?>
-                    <p class="dlab-bank-transfer__expires">
+                    <h4 class="dlab-bank-transfer__expires">
                         <strong><?php esc_html_e('Uhraďte do:', 'design-lab'); ?></strong>
-                        <?php echo esc_html(date_i18n('j. n. Y H:i', strtotime($order->expires_at))); ?>
-                    </p>
+                        <strong><?php echo esc_html(date_i18n('j. n. Y H:i', strtotime($order->expires_at))); ?></strong>
+                    </h4>
                 <?php endif; ?>
 
                 <?php if ($order->status !== 'paid') : ?>
-                <p class="dlab-bank-transfer__note">
+                <h4 class="dlab-bank-transfer__note">
                     <?php esc_html_e('Po přijetí platby potvrdíme rezervaci a pošleme e-mail. Do té doby je místo rezervované.', 'design-lab'); ?>
-                </p>
+                </h4>
                 <?php endif; ?>
                 <?php endif; ?>
 

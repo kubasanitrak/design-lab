@@ -12,11 +12,15 @@ if (!defined('ABSPATH')) {
 $listing_url  = DLab_Settings::listing_page_url();
 $checkout_url = DLab_Settings::checkout_page_url();
 ?>
+<div data-theme="DD-beige" class="section scroll-trigger section-content section-full-width">
+    <div class="inner-content">
+        <h1 class="wp-block-heading has-text-align-center dlab-pass__title"><strong><?php esc_html_e('Design Lab pass', 'design-lab'); ?></strong></h1>
+    </div>
+</div>
 <div data-theme="DD-beige" class="section scroll-trigger section-content scroll-trigger--cols section-content--dilna section-full-width pad-B-4 dlab-pass" id="dlab-pass" data-dlab-pass>
     <div class="inner-content">
         <div class="wp-block-group single-col single-col--narrow">
             <div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
-                <h1 class="wp-block-heading has-text-align-center dlab-pass__title"><strong><?php esc_html_e('Design Lab pass', 'design-lab'); ?></strong></h1>
                 <p class="dlab-pass__notice" data-dlab-pass-notice hidden></p>
                 <div class="dlab-pass__body" data-dlab-pass-body>
                     <?php include DLAB_PLUGIN_DIR . 'public/partials/pass-lines.php'; ?>

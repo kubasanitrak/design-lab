@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.1]
+
+- Pass and payment-recap pages: standalone title sections, bank-transfer layout tweaks.
+
 ## [0.6.0]
 
 - Member accounts: checkout requires login or register-on-submit, verification e-mail → set password, role `dlab_member`.
