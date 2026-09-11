@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.2]
+
+- Checkout page: standalone title section and recap/heading layout aligned with pass and payment pages.
+
 ## [0.6.1]
 
 - Pass and payment-recap pages: standalone title sections, bank-transfer layout tweaks.

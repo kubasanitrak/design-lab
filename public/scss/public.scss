@@ -144,6 +144,9 @@
 				width: 100%;
 			}
 		}
+		.wp-block-button__link {
+			flex-grow: 1;
+		}
 	}
 
 	.dlab-card__explore {
@@ -380,7 +383,7 @@
 
 	&__list {
 		list-style: none;
-		margin: 0 0 calc(var(--pad-T) * 1.2);
+		margin: 0;
 		padding: 0;
 		border-top: $line-THICK solid var(--color-contrast-high);
 	}

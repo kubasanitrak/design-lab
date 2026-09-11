@@ -21,11 +21,15 @@ $pass_url     = DLab_Settings::pass_page_url();
 $is_logged_in = !empty($is_logged_in);
 $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_Settings::checkout_page_url());
 ?>
+<div data-theme="DD-beige" class="section scroll-trigger section-content section-full-width">
+    <div class="inner-content">
+        <h1 class="wp-block-heading has-text-align-center dlab-checkout__title"><strong><?php esc_html_e('Rezervace', 'design-lab'); ?></strong></h1>
+    </div>
+</div>
 <div data-theme="DD-beige" class="section scroll-trigger section-content section-content--dilna section-full-width pad-B-4 dlab-checkout" id="dlab-checkout" data-dlab-checkout>
     <div class="inner-content">
         <div class="wp-block-group single-col single-col--narrow">
             <div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
-                <h1 class="wp-block-heading has-text-align-center dlab-checkout__title"><strong><?php esc_html_e('Rezervace', 'design-lab'); ?></strong></h1>
                 <p class="dlab-checkout__notice" data-dlab-checkout-notice hidden></p>
 
                 <?php if (!$is_logged_in) : ?>
@@ -38,13 +42,13 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                                 <?php esc_html_e('Přihlásit se', 'design-lab'); ?>
                             </a>
                         </p>
-                        <p class="dlab-checkout__section-label caps"><?php esc_html_e('Nová registrace', 'design-lab'); ?></p>
+                        <p class="dlab-checkout__section-label"><?php esc_html_e('Nová registrace', 'design-lab'); ?></p>
                     </div>
                 <?php endif; ?>
 
                 <form id="dlab-checkout-form" class="dlab-checkout-form">
-                    <div class="dlab-checkout__recap">
-                        <p class="dlab-checkout__section-label caps"><?php esc_html_e('Váš pass', 'design-lab'); ?></p>
+                    <div class="dlab-checkout__recap mar-B-1">
+                        <h4 class="dlab-checkout__section-label"><?php esc_html_e('Váš pass', 'design-lab'); ?></h4>
                         <ul class="dlab-pass__list dlab-checkout__list">
                             <?php foreach ($items as $item) :
                                 $line_total = isset($item->line_total) ? (float) $item->line_total : 0;
@@ -57,43 +61,43 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                                                 <strong><a href="<?php echo esc_url($item->permalink); ?>"><?php echo esc_html($item->post_title); ?></a></strong>
                                             </h3>
                                             <?php if (!empty($item->schedule)) : ?>
-                                                <p class="dlab-pass-line__schedule"><?php echo esc_html($item->schedule); ?></p>
+                                                <h4 class="dlab-pass-line__schedule"><?php echo esc_html($item->schedule); ?></h4>
                                             <?php endif; ?>
                                             <?php if ($spot_type === DLab_Capacity::SPOT_ALTERNATE) : ?>
-                                                <p class="dlab-pass-line__waitlist"><?php esc_html_e('Náhradník / čekací listina', 'design-lab'); ?></p>
+                                                <h4 class="dlab-pass-line__waitlist"><?php esc_html_e('Náhradník / čekací listina', 'design-lab'); ?></h4>
                                             <?php endif; ?>
                                         </div>
                                         <div class="dlab-pass-line__price">
-                                            <strong><?php echo esc_html(DLab_Workshop::format_price($line_total)); ?></strong>
+                                            <h4 class=""><strong><?php echo esc_html(DLab_Workshop::format_price($line_total)); ?></strong></h4>
                                         </div>
                                     </div>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
 
-                        <p class="dlab-pass__row">
-                            <span><?php esc_html_e('Počet účastníků', 'design-lab'); ?></span>
-                            <span><?php echo esc_html((string) $spots); ?></span>
-                        </p>
+                        <div class="dlab-pass__row dlab-pass-line">
+                            <p class="plain"><span><?php esc_html_e('Počet účastníků', 'design-lab'); ?></span></p>
+                            <p class="plain"><span><?php echo esc_html((string) $spots); ?></span></p>
+                        </div>
                         <?php if ($pass_applied && (float) $summary['discount'] > 0) : ?>
-                            <p class="dlab-pass__row dlab-pass__row--discount">
-                                <span><?php esc_html_e('Design Lab pass', 'design-lab'); ?></span>
-                                <span>−<?php echo esc_html($summary['discount_formatted']); ?></span>
-                            </p>
+                            <div class="dlab-pass__row dlab-pass__row--discount">
+                                <p class="plain"><span><?php esc_html_e('Design Lab pass', 'design-lab'); ?></span></p>
+                                <p class="plain"><span>−<?php echo esc_html($summary['discount_formatted']); ?></span></p>
+                            </div>
                         <?php endif; ?>
-                        <p class="dlab-pass__row dlab-pass__row--total">
-                            <span class="h4 wp-block-heading"><strong><?php esc_html_e('Celkem', 'design-lab'); ?></strong></span>
-                            <strong><?php echo esc_html($summary['total_formatted']); ?></strong>
-                        </p>
-                        <p class="dlab-checkout__edit">
-                            <a class="textlink textlink-underline" href="<?php echo esc_url($pass_url); ?>">
+                        <div class="dlab-pass__row dlab-pass__row--total mar-T-1">
+                            <h4 class=""><strong><?php esc_html_e('Celkem', 'design-lab'); ?></strong></h4>
+                            <h4 class=""><strong><?php echo esc_html($summary['total_formatted']); ?></strong></h4>
+                        </div>
+                        <div class="dlab-checkout__edit">
+                            <a class="btn dlab-btn dlab-copy-payment wp-block-button__link has-dd-white-color has-dd-black-background-color has-text-color has-background" href="<?php echo esc_url($pass_url); ?>">
                                 <?php esc_html_e('Upravit pass', 'design-lab'); ?>
                             </a>
-                        </p>
+                        </div>
                     </div>
 
                     <fieldset class="dlab-checkout__section">
-                        <legend class="dlab-checkout__section-label caps">
+                        <legend class="dlab-checkout__section-label h4">
                             <?php echo $is_logged_in ? esc_html__('Kontakt', 'design-lab') : esc_html__('Registrační údaje', 'design-lab'); ?>
                         </legend>
                         <div class="dlab-checkout__field">
@@ -117,7 +121,7 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                     </fieldset>
 
                     <fieldset class="dlab-checkout__section">
-                        <legend class="dlab-checkout__section-label caps"><?php esc_html_e('Účastníci', 'design-lab'); ?></legend>
+                        <legend class="dlab-checkout__section-label h4"><?php esc_html_e('Účastníci', 'design-lab'); ?></legend>
                         <p class="dlab-checkout__hint minor"><?php esc_html_e('Stejní účastníci platí pro všechny workshopy v rezervaci.', 'design-lab'); ?></p>
                         <?php for ($i = 0; $i < $spots; $i++) : ?>
                             <div class="dlab-checkout__field">
@@ -136,7 +140,7 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                     </fieldset>
 
                     <fieldset class="dlab-checkout__section">
-                        <legend class="dlab-checkout__section-label caps"><?php esc_html_e('Platba', 'design-lab'); ?></legend>
+                        <legend class="dlab-checkout__section-label h4"><?php esc_html_e('Platba', 'design-lab'); ?></legend>
                         <p class="dlab-checkout__hint"><?php esc_html_e('Bankovní převod — po odeslání rezervace uvidíte platební údaje a QR kód.', 'design-lab'); ?></p>
                     </fieldset>
 
