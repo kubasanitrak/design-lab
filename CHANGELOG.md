@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.3]
+
+- Pass and checkout: ghost back-links with arrows, recap heading sizes, pass-line header alignment.
+
 ## [0.6.2]
 
 - Checkout page: standalone title section and recap/heading layout aligned with pass and payment pages.

@@ -61,14 +61,14 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                                                 <strong><a href="<?php echo esc_url($item->permalink); ?>"><?php echo esc_html($item->post_title); ?></a></strong>
                                             </h3>
                                             <?php if (!empty($item->schedule)) : ?>
-                                                <h4 class="dlab-pass-line__schedule"><?php echo esc_html($item->schedule); ?></h4>
+                                                <h5 class="dlab-pass-line__schedule h5"><?php echo esc_html($item->schedule); ?></h5>
                                             <?php endif; ?>
                                             <?php if ($spot_type === DLab_Capacity::SPOT_ALTERNATE) : ?>
                                                 <h4 class="dlab-pass-line__waitlist"><?php esc_html_e('Náhradník / čekací listina', 'design-lab'); ?></h4>
                                             <?php endif; ?>
                                         </div>
                                         <div class="dlab-pass-line__price">
-                                            <h4 class=""><strong><?php echo esc_html(DLab_Workshop::format_price($line_total)); ?></strong></h4>
+                                            <h5 class=""><?php echo esc_html(DLab_Workshop::format_price($line_total)); ?></h5>
                                         </div>
                                     </div>
                                 </li>
@@ -90,9 +90,7 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                             <h4 class=""><strong><?php echo esc_html($summary['total_formatted']); ?></strong></h4>
                         </div>
                         <div class="dlab-checkout__edit">
-                            <a class="btn dlab-btn dlab-copy-payment wp-block-button__link has-dd-white-color has-dd-black-background-color has-text-color has-background" href="<?php echo esc_url($pass_url); ?>">
-                                <?php esc_html_e('Upravit pass', 'design-lab'); ?>
-                            </a>
+                            <a class="wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($pass_url); ?>">&larr;&ThinSpace;<?php esc_html_e('Upravit pass', 'design-lab'); ?> </a>
                         </div>
                     </div>
 

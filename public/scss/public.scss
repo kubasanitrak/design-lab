@@ -422,11 +422,11 @@
 
 	&__header {
 		display: flex;
-		// justify-content: space-between;
+		justify-content: space-between;
 		// align-items: flex-start;
-		gap: var(--gap);
 		align-items: flex-end;
-		justify-content: flex-start;
+		gap: var(--gap);
+		// justify-content: flex-start;
 	}
 
 	&__title {
@@ -445,8 +445,8 @@
 
 	&__schedule,
 	&__waitlist {
-		margin: calc(var(--gap) * 0.25) 0 0;
-		font-size: $fz-MINOR;
+		margin: calc(var(--gap) * 0.5) 0 0;
+		// font-size: $fz-MINOR;
 		color: var(--gray2, #7a7a7a);
 	}
 
@@ -705,7 +705,7 @@
 	}
 
 	&__edit {
-		margin: calc(var(--gap) * 0.75) 0 0;
+		margin: calc(var(--gap) * 1.75) 0 0;
 	}
 
 	&__consents {
@@ -720,7 +720,7 @@
 	}
 
 	&__list {
-		margin-bottom: calc(var(--pad-T) * 0.85);
+		// margin-bottom: calc(var(--pad-T) * 0.85);
 	}
 }
 
