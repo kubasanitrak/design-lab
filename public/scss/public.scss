@@ -452,7 +452,8 @@
 
 	&__price {
 		display: flex;
-		align-items: flex-start;
+		// align-items: flex-start;
+		align-items: center;
 		gap: calc(var(--gap) * 0.65);
 		white-space: nowrap;
 	}

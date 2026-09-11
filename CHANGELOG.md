@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.4]
+
+- Pass and checkout ghost links: wider arrow spacing; pass-line price vertically centered.
+
 ## [0.6.3]
 
 - Pass and checkout: ghost back-links with arrows, recap heading sizes, pass-line header alignment.

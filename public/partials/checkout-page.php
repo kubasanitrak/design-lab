@@ -90,7 +90,7 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                             <h4 class=""><strong><?php echo esc_html($summary['total_formatted']); ?></strong></h4>
                         </div>
                         <div class="dlab-checkout__edit">
-                            <a class="wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($pass_url); ?>">&larr;&ThinSpace;<?php esc_html_e('Upravit pass', 'design-lab'); ?> </a>
+                            <a class="wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($pass_url); ?>">&larr;&nbsp;&nbsp;<?php esc_html_e('Upravit pass', 'design-lab'); ?> </a>
                         </div>
                     </div>
 

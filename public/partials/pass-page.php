@@ -27,7 +27,7 @@ $checkout_url = DLab_Settings::checkout_page_url();
                 </div>
                 <?php if (!empty($summary['items'])) : ?>
                     <div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex dlab-pass__continue">
-                        <a class="wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($listing_url); ?>">&larr;&ThinSpace;<?php esc_html_e('Přidat další workshop', 'design-lab'); ?> </a>
+                        <a class="wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($listing_url); ?>">&larr;&nbsp;&nbsp;<?php esc_html_e('Přidat další workshop', 'design-lab'); ?> </a>
                         <a class="wp-block-button__link has-dd-white-color has-dd-black-background-color has-text-color has-background has-link-color btn dlab-btn" href="<?php echo esc_url($checkout_url); ?>">
                             <?php esc_html_e('Rezervovat', 'design-lab'); ?>
                         </a>
