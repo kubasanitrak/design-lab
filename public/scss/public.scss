@@ -104,19 +104,15 @@
 		display: inline-flex;
 		padding: calc(var(--gap) * 0.65);
 		border-radius: 10vmax;
-		background: var(--color-contrast-high);
-		color: var(--DD-white, #fff);
+		background: var(--DD-pink);
+		// color: var(--DD-white, #fff);
+		color: var(--color-contrast-high, #000);
 		font-size: $fz-H5;
 		line-height: 1.2;
 		letter-spacing: 0.03em;
 		position: absolute;
 		top: var(--gap);
 		right: var(--gap);
-		background-color: var(--DD-pink);
-		aspect-ratio: 1;
-		justify-content: center;
-		align-content: center;
-		align-items: center;
 	}
 
 	.dlab-card__occupancy {
@@ -177,7 +173,15 @@
 		background-color: var(--color-contrast-high, #000);
 		color: var(--DD-white, #fff);
 		border: none;
+		width: 100%;
+		font-size: $fz-NAV;
+		font-family: 'Jokker-M' !important;
+		font-weight: normal;
+		font-style: normal;
 		&.is-in-pass {
+			font-family: 'Jokker-B' !important;
+			font-weight: normal;
+			font-style: normal;
 			--color-contrast-high: var(--DD-black, #000);
 			color: var(--DD-black, #000);
 			background-color: transparent;
