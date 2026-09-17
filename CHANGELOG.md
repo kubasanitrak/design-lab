@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.6]
+
+- Workshop card age badge: pink circular chip, centered label.
+
 ## [0.6.5]
 
 - Listing filters and workshop tags reduced to age categories only: 6+, 8+, 10+.
