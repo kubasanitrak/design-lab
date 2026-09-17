@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.7]
+
+- Age badge: pink background with dark text; pass button full-width with Jokker type.
+
 ## [0.6.6]
 
 - Workshop card age badge: pink circular chip, centered label.
