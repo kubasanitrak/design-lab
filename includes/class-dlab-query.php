@@ -24,7 +24,6 @@ class DLab_Query {
             'order'           => 'ASC',
             'only_open'       => '',
             'age'             => '',
-            'field'           => '',
             'use_url_filters' => 'true',
         ));
 
@@ -71,34 +70,20 @@ class DLab_Query {
     }
 
     private static function build_tax_query($atts, $use_url) {
-        $map = array(
-            'age' => array(
-                'tax'  => DLab_Post_Types::TAX_AGE,
-                'get'  => self::GET_AGE,
-                'slug' => $atts['age'],
-            ),
-            'field' => array(
-                'tax'  => DLab_Post_Types::TAX_FIELD,
-                'get'  => self::GET_FIELD,
-                'slug' => $atts['field'],
-            ),
-        );
-
-        $tax_query = array();
-        foreach ($map as $row) {
-            $slug = $use_url ? self::get_param($row['get'], $row['slug']) : sanitize_title($row['slug']);
-            $slug = sanitize_title($slug);
-            if ($slug === '') {
-                continue;
-            }
-            $tax_query[] = array(
-                'taxonomy' => $row['tax'],
-                'field'    => 'slug',
-                'terms'    => $slug,
-            );
+        $fallback = isset($atts['age']) ? $atts['age'] : '';
+        $slug     = $use_url ? self::get_param(self::GET_AGE, $fallback) : sanitize_title($fallback);
+        $slug     = sanitize_title($slug);
+        if ($slug === '' || !in_array($slug, DLab_Post_Types::AGE_FILTER_SLUGS, true)) {
+            return array();
         }
 
-        return $tax_query;
+        return array(
+            array(
+                'taxonomy' => DLab_Post_Types::TAX_AGE,
+                'field'    => 'slug',
+                'terms'    => $slug,
+            ),
+        );
     }
 
     private static function get_param($key, $fallback) {
@@ -127,68 +112,60 @@ class DLab_Query {
     }
 
     public static function get_active_filters() {
+        $slug = self::get_param(self::GET_AGE, '');
+        if ($slug !== '' && !in_array($slug, DLab_Post_Types::AGE_FILTER_SLUGS, true)) {
+            $slug = '';
+        }
         return array(
-            'age'   => self::get_param(self::GET_AGE, ''),
-            'field' => self::get_param(self::GET_FIELD, ''),
+            'age' => $slug,
         );
     }
 
     /**
-     * Pills from current taxonomy terms (age + field).
+     * Pills from age categories only (6+, 8+, 10+).
      *
      * @return array<int, array{key:string,param:string,slug:string,label:string,active:bool}>
      */
     public static function get_filter_pills() {
         $active = self::get_active_filters();
         $pills  = array();
+        $terms  = get_terms(array(
+            'taxonomy'   => DLab_Post_Types::TAX_AGE,
+            'hide_empty' => false,
+            'slug'       => DLab_Post_Types::AGE_FILTER_SLUGS,
+        ));
+        if (is_wp_error($terms) || empty($terms)) {
+            return $pills;
+        }
 
-        $groups = array(
-            array(
-                'key'   => 'age',
-                'param' => self::GET_AGE,
-                'tax'   => DLab_Post_Types::TAX_AGE,
-            ),
-            array(
-                'key'   => 'field',
-                'param' => self::GET_FIELD,
-                'tax'   => DLab_Post_Types::TAX_FIELD,
-            ),
-        );
+        $by_slug = array();
+        foreach ($terms as $term) {
+            $by_slug[$term->slug] = $term;
+        }
 
-        foreach ($groups as $group) {
-            $terms = get_terms(array(
-                'taxonomy'   => $group['tax'],
-                'hide_empty' => false,
-            ));
-            if (is_wp_error($terms) || empty($terms)) {
+        foreach (DLab_Post_Types::AGE_FILTER_SLUGS as $slug) {
+            if (!isset($by_slug[$slug])) {
                 continue;
             }
-            foreach ($terms as $term) {
-                $pills[] = array(
-                    'key'    => $group['key'],
-                    'param'  => $group['param'],
-                    'slug'   => $term->slug,
-                    'label'  => $term->name,
-                    'active' => (($active[$group['key']] ?? '') === $term->slug),
-                );
-            }
+            $term    = $by_slug[$slug];
+            $pills[] = array(
+                'key'    => 'age',
+                'param'  => self::GET_AGE,
+                'slug'   => $term->slug,
+                'label'  => $term->name,
+                'active' => (($active['age'] ?? '') === $term->slug),
+            );
         }
 
         return $pills;
     }
 
     public static function get_active_filter_query_args() {
-        $map = array(
-            self::GET_AGE   => self::get_param(self::GET_AGE, ''),
-            self::GET_FIELD => self::get_param(self::GET_FIELD, ''),
-        );
-        $args = array();
-        foreach ($map as $param => $slug) {
-            if ($slug !== '') {
-                $args[$param] = $slug;
-            }
+        $active = self::get_active_filters();
+        if ($active['age'] === '') {
+            return array();
         }
-        return $args;
+        return array(self::GET_AGE => $active['age']);
     }
 
     public static function get_filter_base_url($page_url) {

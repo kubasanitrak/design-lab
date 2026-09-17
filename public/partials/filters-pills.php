@@ -1,6 +1,6 @@
 <?php
 /**
- * Pill-style GET filters (věk, obor).
+ * Pill-style GET filters (věk: 6+, 8+, 10+).
  *
  * @var string $filter_action
  */

@@ -17,6 +17,9 @@ class DLab_Post_Types {
     const TAX_AGE   = 'dlab_vek';
     const TAX_FIELD = 'dlab_obor';
 
+    /** Public filter / tag slugs, in display order. */
+    const AGE_FILTER_SLUGS = array('6-plus', '8-plus', '10-plus');
+
     const TYPE_DESIGNLAB = 'designlab';
 
     public function __construct() {

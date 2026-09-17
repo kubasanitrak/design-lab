@@ -18,7 +18,7 @@ Default language of strings in code is **Czech**. English WordPress installs loa
 | `[dlab_pass]` | Pass recap / editor (activation creates `/pass/`) |
 | `[dlab_checkout]` | Reservation checkout + payment recap / QR (activation creates `/rezervace/`) |
 
-**URL filters** (GET): `dlab_vek`, `dlab_obor` (term slugs).
+**URL filters** (GET): `dlab_vek` with slugs `6-plus`, `8-plus`, `10-plus`.
 
 Example listing page (created on activation):
 
@@ -53,11 +53,11 @@ The main plugin file loads `vendor/autoload.php` when present.
 1. Bump `Version` and `DLAB_VERSION` in `design-lab.php`.
 2. Add a `## [x.y.z]` section to `CHANGELOG.md`.
 3. Commit and push to `main`.
-4. Create and push a matching tag (header `0.6.4` → tag `v0.6.4`):
+4. Create and push a matching tag (header `0.6.5` → tag `v0.6.5`):
 
 ```bash
-git tag v0.6.4
-git push origin v0.6.4
+git tag v0.6.5
+git push origin v0.6.5
 ```
 
 GitHub Actions builds `design-lab.zip` and publishes a GitHub Release. Installed sites check for updates via [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) (vendored under `lib/plugin-update-checker/`).

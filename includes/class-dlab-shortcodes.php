@@ -62,7 +62,6 @@ class DLab_Shortcodes {
             'title'           => '',
             'only_open'       => 'false',
             'age'             => '',
-            'field'           => '',
             'use_url_filters' => 'false',
             'show_filters'    => 'false',
         ), $atts, 'dlab_workshops_grid');
@@ -91,7 +90,6 @@ class DLab_Shortcodes {
             'title'           => '',
             'only_open'       => 'false',
             'age'             => '',
-            'field'           => '',
             'use_url_filters' => 'true',
             'show_filters'    => 'true',
             'filter_action'   => '',

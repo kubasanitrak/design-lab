@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.5]
+
+- Listing filters and workshop tags reduced to age categories only: 6+, 8+, 10+.
+
 ## [0.6.4]
 
 - Pass and checkout ghost links: wider arrow spacing; pass-line price vertically centered.

@@ -203,12 +203,11 @@ class DLab_Workshop {
      * First age-group term, e.g. 8+.
      */
     public static function get_age_label($post_id) {
-        $terms = get_the_terms($post_id, DLab_Post_Types::TAX_AGE);
-        if (!is_array($terms) || empty($terms)) {
+        $terms = self::get_filter_terms($post_id);
+        if (empty($terms)) {
             return '';
         }
-        $term = reset($terms);
-        return $term && !is_wp_error($term) ? $term->name : '';
+        return $terms[0]->name;
     }
 
     /**
@@ -262,13 +261,20 @@ class DLab_Workshop {
      * @return WP_Term[]
      */
     public static function get_filter_terms($post_id) {
-        $terms = array();
-        foreach (array(DLab_Post_Types::TAX_AGE, DLab_Post_Types::TAX_FIELD) as $tax) {
-            $post_terms = get_the_terms($post_id, $tax);
-            if (is_array($post_terms)) {
-                $terms = array_merge($terms, $post_terms);
-            }
+        $terms = get_the_terms($post_id, DLab_Post_Types::TAX_AGE);
+        if (!is_array($terms) || empty($terms)) {
+            return array();
         }
+
+        $allowed = array_flip(DLab_Post_Types::AGE_FILTER_SLUGS);
+        $terms   = array_values(array_filter($terms, function ($term) use ($allowed) {
+            return isset($allowed[$term->slug]);
+        }));
+
+        usort($terms, function ($a, $b) use ($allowed) {
+            return ($allowed[$a->slug] ?? 99) <=> ($allowed[$b->slug] ?? 99);
+        });
+
         return $terms;
     }
 
@@ -289,10 +295,7 @@ class DLab_Workshop {
             echo '<li>';
             if ($args['link']) {
                 $listing = DLab_Settings::listing_page_url();
-                $param   = $term->taxonomy === DLab_Post_Types::TAX_AGE
-                    ? DLab_Query::GET_AGE
-                    : DLab_Query::GET_FIELD;
-                echo '<a href="' . esc_url(add_query_arg($param, $term->slug, $listing)) . '">' . esc_html($term->name) . '</a>';
+                echo '<a href="' . esc_url(add_query_arg(DLab_Query::GET_AGE, $term->slug, $listing)) . '">' . esc_html($term->name) . '</a>';
             } else {
                 echo esc_html($term->name);
             }
