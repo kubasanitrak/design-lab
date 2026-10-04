@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.10]
+
+- Empty-pass “Vybrat workshopy” ghost button; listing links scroll to `#workshops`; grid cards show date only.
+
 ## [0.6.9]
 
 - Floating “můj design pass” widget links to the pass page instead of checkout.
