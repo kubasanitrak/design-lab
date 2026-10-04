@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 $filter_action = $filter_action ?: get_permalink();
 ?>
-<div class="dlab-listing dlab-listing--list section section--dilny-grid">
+<div class="dlab-listing dlab-listing--list section section--dilny-grid" id="workshops">
     <?php if (!empty($title)) : ?>
         <header class="dlab-listing__header">
             <h2 class="dlab-listing__title strong"><?php echo esc_html($title); ?></h2>
@@ -36,9 +36,10 @@ $filter_action = $filter_action ?: get_permalink();
         </div>
         <?php
         $pagination = paginate_links(array(
-            'total'   => $query->max_num_pages,
-            'current' => max(1, (int) get_query_var('paged')),
-            'type'    => 'list',
+            'total'        => $query->max_num_pages,
+            'current'      => max(1, (int) get_query_var('paged')),
+            'type'         => 'list',
+            'add_fragment' => '#workshops',
         ));
         if ($pagination) {
             echo '<nav class="dlab-pagination">' . wp_kses_post($pagination) . '</nav>';

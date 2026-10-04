@@ -18,7 +18,7 @@ Default language of strings in code is **Czech**. English WordPress installs loa
 | `[dlab_pass]` | Pass recap / editor (activation creates `/pass/`) |
 | `[dlab_checkout]` | Reservation checkout + payment recap / QR (activation creates `/rezervace/`) |
 
-**URL filters** (GET): `dlab_vek` with slugs `6-plus`, `8-plus`, `10-plus`.
+**URL filters** (GET): `dlab_vek` with slugs `6-plus`, `6-plus-rodic`, `8-plus`, `10-plus`.
 
 Example listing page (created on activation):
 

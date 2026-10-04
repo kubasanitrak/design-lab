@@ -47,6 +47,10 @@
             this.setAttribute('data-dlab-basket-count', String(count));
             this.textContent = label;
         });
+        $('[data-dlab-pass-widget-count]').each(function () {
+            this.textContent = String(count);
+            this.hidden = count < 1;
+        });
     }
 
     function toggleContinue(count) {
@@ -279,7 +283,8 @@
             contact_phone: $form.find('[name="contact_phone"]').val(),
             attendees: JSON.stringify(attendees),
             agree_terms: $form.find('[name="agree_terms"]').is(':checked') ? 1 : 0,
-            agree_gdpr: $form.find('[name="agree_gdpr"]').is(':checked') ? 1 : 0
+            agree_gdpr: $form.find('[name="agree_gdpr"]').is(':checked') ? 1 : 0,
+            agree_photo: $form.find('[name="agree_photo"]').is(':checked') ? 1 : 0
         }, function (data, err) {
             $btn.prop('disabled', false);
             if (err) {

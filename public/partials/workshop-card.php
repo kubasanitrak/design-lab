@@ -12,7 +12,10 @@ if (!defined('ABSPATH')) {
 $post_id    = isset($post_id) ? (int) $post_id : get_the_ID();
 $permalink  = get_permalink($post_id);
 $title      = get_the_title($post_id);
-$date       = DLab_Workshop::get_card_date($post_id);
+$date       = DLab_Workshop::get_schedule_summary($post_id);
+if ($date === '') {
+    $date = DLab_Workshop::get_card_date($post_id);
+}
 $age        = DLab_Workshop::get_age_label($post_id);
 $occupancy  = DLab_Workshop::get_occupancy($post_id);
 $img_id     = DLab_Workshop::get_tile_image_id($post_id);
@@ -33,13 +36,13 @@ $class      = '';
         <?php endif; ?>
     </div>
     <div class="grid-item--label">
-        <h4 class="grid-item--title strong"><?php echo esc_html($title); ?></h4>
-        <div class="dlab-card__meta">
+        <div class="dlab-card__heading">
+            <h4 class="grid-item--title strong"><?php echo esc_html($title); ?></h4>
             <?php if ($date) : ?>
-                <time class="dlab-card__date minor" datetime="<?php echo esc_attr(DLab_Workshop::get_workshop_date($post_id)); ?>">
-                    <?php echo esc_html($date); ?>
-                </time>
+                <h4 class="dlab-card__date"><?php echo esc_html($date); ?></h4>
             <?php endif; ?>
+        </div>
+        <div class="dlab-card__meta">
             <span class="dlab-card__occupancy dlab-card__occupancy--<?php echo esc_attr($occupancy['status']); ?>">
                 <?php echo esc_html($occupancy['label']); ?>
             </span>

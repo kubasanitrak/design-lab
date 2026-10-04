@@ -37,6 +37,10 @@ class DLab_Settings {
     const OPT_ADMIN_NOTIFICATION_ENABLED = 'dlab_admin_notification_enabled';
     const OPT_ADMIN_NOTIFICATION_EMAIL    = 'dlab_admin_notification_email';
 
+    const OPT_LEGAL_STORNO  = 'dlab_legal_storno';
+    const OPT_LEGAL_PHOTO   = 'dlab_legal_photo';
+    const OPT_LEGAL_PRIVACY = 'dlab_legal_privacy';
+
     public function __construct() {
         add_action('admin_init', array($this, 'register_settings'));
     }
@@ -66,6 +70,9 @@ class DLab_Settings {
             self::OPT_EMAIL_TEMPLATE_TYPE         => 'html',
             self::OPT_ADMIN_NOTIFICATION_ENABLED => 1,
             self::OPT_ADMIN_NOTIFICATION_EMAIL    => '',
+            self::OPT_LEGAL_STORNO               => self::default_legal_storno(),
+            self::OPT_LEGAL_PHOTO                => self::default_legal_photo(),
+            self::OPT_LEGAL_PRIVACY              => self::default_legal_privacy(),
         );
     }
 
@@ -298,6 +305,47 @@ class DLab_Settings {
         return (bool) get_option(self::OPT_ADMIN_NOTIFICATION_ENABLED, 1);
     }
 
+    public static function default_legal_storno() {
+        return __('Workshop se koná při minimálním počtu 10 přihlášených. Pokud se minimální kapacita nenaplní, budeme vás informovat nejpozději 3 dny před jeho konáním. V případě zrušení vám nabídneme náhradní termín nebo vrácení uhrazené částky.', 'design-lab');
+    }
+
+    public static function default_legal_photo() {
+        return __('Souhlasím s pořizováním a použitím fotografií a audiovizuálních záznamů mého dítěte pro prezentaci a propagaci aktivit organizace Designéři dětem.', 'design-lab');
+    }
+
+    public static function default_legal_privacy() {
+        return __('Registrací dítěte na Design Lab dáváte, jakožto zákonný zástupce, svobodný a dobrovolný souhlas se zpracováním osobních údajů. Při nakládání s osobními údaji obsaženými v této přihlášce se bude postupovat v souladu s Nařízením Evropského parlamentu a Rady (EU) 2016/679 ze dne 27. dubna 2016 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů a o volném pohybu těchto údajů a o zrušení směrnice 95/46/ES.', 'design-lab');
+    }
+
+    public static function legal_storno() {
+        $value = get_option(self::OPT_LEGAL_STORNO, false);
+        return $value === false ? self::default_legal_storno() : (string) $value;
+    }
+
+    public static function legal_photo_label() {
+        $value = get_option(self::OPT_LEGAL_PHOTO, false);
+        return $value === false ? self::default_legal_photo() : trim((string) $value);
+    }
+
+    public static function legal_privacy() {
+        $value = get_option(self::OPT_LEGAL_PRIVACY, false);
+        return $value === false ? self::default_legal_privacy() : (string) $value;
+    }
+
+    /**
+     * HTML for the storno statement. Empty when the setting is cleared.
+     */
+    public static function legal_storno_html() {
+        return self::format_legal_html(self::legal_storno());
+    }
+
+    /**
+     * HTML for the privacy notice. Empty when the setting is cleared.
+     */
+    public static function legal_privacy_html() {
+        return self::format_legal_html(self::legal_privacy());
+    }
+
     public static function admin_notification_email() {
         $email = (string) get_option(self::OPT_ADMIN_NOTIFICATION_EMAIL, '');
         if ($email === '' || !is_email($email)) {
@@ -414,6 +462,18 @@ class DLab_Settings {
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_email',
         ));
+        register_setting('dlab_settings', self::OPT_LEGAL_STORNO, array(
+            'type'              => 'string',
+            'sanitize_callback' => array($this, 'sanitize_legal_html'),
+        ));
+        register_setting('dlab_settings', self::OPT_LEGAL_PHOTO, array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_textarea_field',
+        ));
+        register_setting('dlab_settings', self::OPT_LEGAL_PRIVACY, array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_textarea_field',
+        ));
     }
 
     public function sanitize_checkbox($value) {
@@ -462,9 +522,28 @@ class DLab_Settings {
         return max(0, (int) $value);
     }
 
+    public function sanitize_legal_html($value) {
+        return wp_kses_post($value);
+    }
+
     public function sanitize_email_template_type($value) {
         $value = sanitize_key($value);
         return $value === 'plain' ? 'plain' : 'html';
+    }
+
+    private static function format_legal_html($value) {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return '';
+        }
+        $safe = wp_kses_post($value);
+        if ($safe === '') {
+            return '';
+        }
+        if ($safe === wp_strip_all_tags($safe)) {
+            return wpautop($safe);
+        }
+        return $safe;
     }
 
     private static function next_sequence_value() {

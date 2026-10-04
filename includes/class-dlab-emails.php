@@ -54,11 +54,39 @@ class DLab_Emails {
             $order->order_number
         );
 
+        $is_html = DLab_Settings::email_template_type() === 'html';
+        $qr_png  = '';
+        $embed   = null;
+
+        if ($is_html) {
+            $qr_png = self::fetch_order_qr_png($order);
+            $body   = self::order_confirmation_html($order, $contact, $qr_png !== '');
+            if ($qr_png !== '') {
+                $embed = static function ($phpmailer) use ($qr_png) {
+                    $phpmailer->addStringEmbeddedImage($qr_png, 'dlab-qr', 'qr-platba.png', 'base64', 'image/png');
+                };
+                add_action('phpmailer_init', $embed);
+            }
+            self::mail($contact['email'], $subject, $body, true);
+            if ($embed) {
+                remove_action('phpmailer_init', $embed);
+            }
+        } else {
+            self::mail($contact['email'], $subject, self::order_confirmation_plain($order, $contact));
+        }
+
+        self::notify_admin_new_order($order_id);
+
+        return true;
+    }
+
+    private static function order_confirmation_plain($order, array $contact) {
         $lines = array();
         foreach ($order->items as $item) {
             $lines[] = sprintf('- %s: %s', $item->post_title, DLab_Workshop::format_price($item->line_total));
         }
 
+        $name        = $contact['name'] !== '' ? $contact['name'] : $contact['email'];
         $payment_url = DLab_Checkout::payment_url($order);
         $expires     = '';
         if (!empty($order->expires_at)) {
@@ -69,23 +97,166 @@ class DLab_Emails {
             ) . "\n";
         }
 
-        $body = sprintf(
-            /* translators: 1: name, 2: order number, 3: item list, 4: total, 5: expiry block, 6: payment url note */
-            __("Dobrý den %1\$s,\n\nvaše rezervace %2\$s byla přijata.\n\n%3\$s\n\nCelkem: %4\$s%5\$s\n\n%6\$s\n", 'design-lab'),
-            $contact['name'] !== '' ? $contact['name'] : $contact['email'],
+        $bank_lines = array();
+        foreach (self::payment_rows($order) as $row) {
+            $bank_lines[] = $row['label'] . ': ' . $row['value'];
+        }
+
+        $qr = new DLab_QR();
+        $qr_url = $qr->generate_order_qr($order, 280);
+        if ($qr_url) {
+            $bank_lines[] = __('QR platba', 'design-lab') . ': ' . $qr_url;
+        }
+
+        return sprintf(
+            /* translators: 1: name, 2: order number, 3: item list, 4: total, 5: expiry block, 6: bank details, 7: payment url note */
+            __("Dobrý den %1\$s,\n\nvaše rezervace %2\$s byla přijata.\n\n%3\$s\n\nCelkem: %4\$s%5\$s\n\n%6\$s\n\n%7\$s\n", 'design-lab'),
+            $name,
             $order->order_number,
             implode("\n", $lines),
             DLab_Workshop::format_price($order->total),
             $expires,
+            implode("\n", $bank_lines),
             $payment_url
-                ? sprintf(__('Platební instrukce a QR kód: %s', 'design-lab'), $payment_url)
+                ? sprintf(__('Platební instrukce: %s', 'design-lab'), $payment_url)
                 : __('Platební instrukce najdete na webu.', 'design-lab')
         );
+    }
 
-        self::mail($contact['email'], $subject, $body);
-        self::notify_admin_new_order($order_id);
+    private static function order_confirmation_html($order, array $contact, $has_embedded_qr) {
+        $name = $contact['name'] !== '' ? $contact['name'] : $contact['email'];
+        $rows = '';
+        foreach ($order->items as $item) {
+            $rows .= '<tr><td style="padding:8px 12px 8px 0;border-bottom:1px solid #e6e6e6;">'
+                . esc_html($item->post_title)
+                . '</td><td style="padding:8px 0;border-bottom:1px solid #e6e6e6;text-align:right;white-space:nowrap;">'
+                . esc_html(DLab_Workshop::format_price($item->line_total))
+                . '</td></tr>';
+        }
 
-        return true;
+        $bank = '';
+        foreach (self::payment_rows($order) as $row) {
+            $bank .= '<tr><td style="padding:6px 16px 6px 0;color:#555;">'
+                . esc_html($row['label'])
+                . '</td><td style="padding:6px 0;"><strong>'
+                . esc_html($row['value'])
+                . '</strong></td></tr>';
+        }
+
+        $expires = '';
+        if (!empty($order->expires_at)) {
+            $expires = '<p style="margin:16px 0 0;">'
+                . esc_html(sprintf(
+                    /* translators: %s: datetime */
+                    __('Platbu prosím uhraďte do: %s', 'design-lab'),
+                    date_i18n('j. n. Y H:i', strtotime($order->expires_at))
+                ))
+                . '</p>';
+        }
+
+        $qr_html = '';
+        $qr      = new DLab_QR();
+        $qr_url  = $qr->generate_order_qr($order, 280);
+        if ($has_embedded_qr) {
+            $qr_html = '<p style="margin:20px 0 8px;"><strong>' . esc_html__('QR platba', 'design-lab') . '</strong></p>'
+                . '<img src="cid:dlab-qr" width="220" height="220" alt="' . esc_attr__('QR platba', 'design-lab') . '" style="display:block;border:0;">';
+        } elseif ($qr_url) {
+            $qr_html = '<p style="margin:20px 0 8px;"><strong>' . esc_html__('QR platba', 'design-lab') . '</strong></p>'
+                . '<img src="' . esc_url($qr_url) . '" width="220" height="220" alt="' . esc_attr__('QR platba', 'design-lab') . '" style="display:block;border:0;">';
+        }
+
+        $payment_url = DLab_Checkout::payment_url($order);
+        $link        = '';
+        if ($payment_url) {
+            $link = '<p style="margin:20px 0 0;"><a href="' . esc_url($payment_url) . '">'
+                . esc_html__('Otevřít platební instrukce', 'design-lab')
+                . '</a></p>';
+        }
+
+        $intro = sprintf(
+            /* translators: 1: name, 2: order number */
+            __('Dobrý den %1$s, vaše rezervace %2$s byla přijata.', 'design-lab'),
+            $name,
+            $order->order_number
+        );
+
+        return '<div style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;color:#111;">'
+            . '<p style="margin:0 0 16px;">' . esc_html($intro) . '</p>'
+            . '<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 16px;">'
+            . $rows
+            . '<tr><td style="padding:12px 12px 0 0;"><strong>' . esc_html__('Celkem', 'design-lab') . '</strong></td>'
+            . '<td style="padding:12px 0 0;text-align:right;"><strong>' . esc_html(DLab_Workshop::format_price($order->total)) . '</strong></td></tr>'
+            . '</table>'
+            . '<p style="margin:20px 0 8px;"><strong>' . esc_html__('Platební údaje', 'design-lab') . '</strong></p>'
+            . '<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">' . $bank . '</table>'
+            . $expires
+            . $qr_html
+            . $link
+            . '</div>';
+    }
+
+    /**
+     * @return array<int, array{label:string,value:string}>
+     */
+    private static function payment_rows($order) {
+        $bank = DLab_Settings::bank();
+        $rows = array();
+
+        if ($bank['account_name'] !== '') {
+            $rows[] = array(
+                'label' => __('Příjemce', 'design-lab'),
+                'value' => $bank['account_name'],
+            );
+        }
+        if ($bank['account_full'] !== '') {
+            $rows[] = array(
+                'label' => __('Účet', 'design-lab'),
+                'value' => $bank['account_full'],
+            );
+        }
+        if ($bank['iban'] !== '') {
+            $rows[] = array(
+                'label' => 'IBAN',
+                'value' => $bank['iban'],
+            );
+        }
+        if ($bank['bic'] !== '') {
+            $rows[] = array(
+                'label' => 'SWIFT',
+                'value' => $bank['bic'],
+            );
+        }
+
+        $rows[] = array(
+            'label' => __('Variabilní symbol', 'design-lab'),
+            'value' => DLab_Checkout::variable_symbol($order),
+        );
+        $rows[] = array(
+            'label' => __('Částka', 'design-lab'),
+            'value' => DLab_Workshop::format_price($order->total),
+        );
+
+        return $rows;
+    }
+
+    private static function fetch_order_qr_png($order) {
+        $qr  = new DLab_QR();
+        $url = $qr->generate_order_qr($order, 280);
+        if (!$url) {
+            return '';
+        }
+
+        $response = wp_remote_get($url, array('timeout' => 10));
+        if (is_wp_error($response) || (int) wp_remote_retrieve_response_code($response) !== 200) {
+            return '';
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        if (!is_string($body) || strlen($body) < 80) {
+            return '';
+        }
+
+        return $body;
     }
 
     public static function send_payment_confirmed_email($order_id) {
@@ -182,8 +353,8 @@ class DLab_Emails {
         return self::mail($email, $subject, $body);
     }
 
-    private static function mail($to, $subject, $body) {
-        $is_html = DLab_Settings::email_template_type() === 'html';
+    private static function mail($to, $subject, $body, $raw_html = false) {
+        $is_html = $raw_html || DLab_Settings::email_template_type() === 'html';
         $headers = array(
             'Content-Type: ' . ($is_html ? 'text/html' : 'text/plain') . '; charset=UTF-8',
         );
@@ -194,7 +365,7 @@ class DLab_Emails {
             $headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
         }
 
-        if ($is_html) {
+        if ($is_html && !$raw_html) {
             $body = '<p>' . nl2br(esc_html($body)) . '</p>';
             $body = preg_replace_callback(
                 '#https?://[^\s<]+#',

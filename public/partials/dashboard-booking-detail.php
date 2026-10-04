@@ -49,6 +49,11 @@ $can_reschedule = !empty($booking['cancellation']['can_reschedule']);
         </div>
     </dl>
 
+    <?php
+    $dlab_legal = 'storno';
+    include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
+    ?>
+
     <?php if (!empty($booking['cancellation']['message'])) : ?>
         <p class="dlab-dashboard__notice"><?php echo esc_html($booking['cancellation']['message']); ?></p>
     <?php endif; ?>

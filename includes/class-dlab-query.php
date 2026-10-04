@@ -122,7 +122,7 @@ class DLab_Query {
     }
 
     /**
-     * Pills from age categories only (6+, 8+, 10+).
+     * Pills from age categories only (6+, 6 + rodič, 8+, 10+).
      *
      * @return array<int, array{key:string,param:string,slug:string,label:string,active:bool}>
      */
@@ -179,13 +179,25 @@ class DLab_Query {
     public static function get_filter_toggle_url($base_url, $param, $slug, $group_key) {
         $active = self::get_active_filters();
         if (($active[$group_key] ?? '') === $slug) {
-            return remove_query_arg($param, $base_url);
+            return self::with_workshops_anchor(remove_query_arg($param, $base_url));
         }
-        return add_query_arg($param, $slug, $base_url);
+        return self::with_workshops_anchor(add_query_arg($param, $slug, $base_url));
     }
 
     public static function get_filter_reset_url($base_url) {
-        return remove_query_arg(self::get_all_filter_params(), $base_url);
+        return self::with_workshops_anchor(remove_query_arg(self::get_all_filter_params(), $base_url));
+    }
+
+    /**
+     * Listing URL that scrolls to the workshop grid after load.
+     */
+    public static function with_workshops_anchor($url) {
+        $url  = (string) $url;
+        $hash = strpos($url, '#');
+        if ($hash !== false) {
+            $url = substr($url, 0, $hash);
+        }
+        return $url . '#workshops';
     }
 
     /**

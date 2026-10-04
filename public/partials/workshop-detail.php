@@ -32,8 +32,7 @@ $synopsis    = function_exists('get_field') ? get_field('synopsis', $post_id) : 
 $place_text  = function_exists('get_field') ? get_field('place_text', $post_id) : '';
 $place_photo = function_exists('get_field') ? get_field('place_photo', $post_id) : null;
 $place_url   = function_exists('get_field') ? get_field('place_map_url', $post_id) : '';
-$prereq      = function_exists('get_field') ? get_field('prerequisites', $post_id) : '';
-$listing_url = DLab_Settings::listing_page_url();
+$listing_url = DLab_Query::with_workshops_anchor(DLab_Settings::listing_page_url());
 $instructors = DLab_Workshop::get_instructor_ids($post_id);
 
 $body = $post->post_content;
@@ -46,7 +45,7 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
         <div class="custom-columns">
             <div class="custom-columns--item custom-columns--item_major pad-B-0">
                 <a href="<?php echo esc_url($listing_url); ?>" class="back-to-parent h5">
-                    <?php esc_html_e('← Zpět na výpis', 'design-lab'); ?>
+                    <?php esc_html_e('← Zpět na Design Lab', 'design-lab'); ?>
                 </a>
             </div>
         </div>
@@ -110,27 +109,9 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
                     <li><?php echo esc_html($occupancy['label']); ?></li>
                 </ul>
 
-<!-- TAGLIST -->                    
-                <?php echo DLab_Workshop::render_tags($post_id, array('class' => 'dlab-detail__tags', 'link' => false)); ?>
-<!-- END TAGLIST -->                    
-
 <!-- ADD TO PASS BUTTON -->     
                 <div class="dlab-detail__cta-container">
-                    <?php if ($price) : ?>
-                        <h6 class=""><?php esc_html_e('Cena za osobu', 'design-lab'); ?></h6>
-                        <h3 class="dlab-detail__price"><?php echo esc_html($price); ?></h3>
-                    <?php endif; ?>
-                    <?php if ($pass_price) : ?>
-                        <p class="dlab-detail__pass-price">
-                            <?php
-                            echo esc_html(sprintf(
-                                /* translators: %s: pass unit price */
-                                __('V passu od %s', 'design-lab'),
-                                $pass_price
-                            ));
-                            ?>
-                        </p>
-                    <?php endif; ?>
+                    <?php include DLAB_PLUGIN_DIR . 'public/partials/workshop-prices.php'; ?>
                     <?php include DLAB_PLUGIN_DIR . 'public/partials/add-to-pass.php'; ?>
                 </div>
 <!-- END ADD TO PASS BUTTON -->                    
@@ -214,29 +195,10 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
 
             <!-- ADD TO PASS BUTTON -->  
                 <div class="dlab-detail__cta-container">
-                    <?php if ($price) : ?>
-                        <h6 class=""><?php esc_html_e('Cena za osobu', 'design-lab'); ?></h6>
-                        <h3 class="dlab-detail__price"><?php echo esc_html($price); ?></h3>
-                    <?php endif; ?>
-                    <?php if ($pass_price) : ?>
-                        <p class="dlab-detail__pass-price">
-                            <?php
-                            echo esc_html(sprintf(
-                                /* translators: %s: pass unit price */
-                                __('V passu od %s', 'design-lab'),
-                                $pass_price
-                            ));
-                            ?>
-                        </p>
-                    <?php endif; ?>
+                    <?php include DLAB_PLUGIN_DIR . 'public/partials/workshop-prices.php'; ?>
                     <?php include DLAB_PLUGIN_DIR . 'public/partials/add-to-pass.php'; ?>
                 </div>
             <!-- END ADD TO PASS BUTTON -->  
-                <h2 class="wp-block-heading"><strong><?php esc_html_e('Předpoklady', 'design-lab'); ?></strong></h2>
-
-                    <?php if ($prereq) : ?>
-                        <div class="dlab-detail__prose"><?php echo wp_kses_post(wpautop($prereq)); ?></div>
-                    <?php endif; ?>
                 </div>
     <!-- END STICKY COLUMN -->
         </div>

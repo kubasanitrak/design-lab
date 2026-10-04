@@ -136,6 +136,12 @@ $listing_url = DLab_Settings::listing_page_url();
                     <?php esc_html_e('Po přijetí platby potvrdíme rezervaci a pošleme e-mail. Do té doby je místo rezervované.', 'design-lab'); ?>
                 </h4>
                 <?php endif; ?>
+                <?php
+                $dlab_legal = 'storno';
+                include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
+                $dlab_legal = 'privacy';
+                include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
+                ?>
                 <?php endif; ?>
 
                 <div class="wp-block-buttons is-layout-flex wp-block-buttons-is-layout-flex">

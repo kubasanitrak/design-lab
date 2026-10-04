@@ -37,6 +37,7 @@ class DLab_Auth {
         add_filter('login_redirect', array($this, 'filter_login_redirect'), 10, 3);
         add_filter('login_message', array($this, 'filter_login_message'));
         add_filter('authenticate', array($this, 'block_unverified_login'), 30, 3);
+        add_action('login_enqueue_scripts', array($this, 'enqueue_login_notice_styles'));
         add_shortcode('dlab_set_password', array($this, 'shortcode_set_password'));
         add_filter('dlab_enqueue_public_assets', array($this, 'enqueue_assets_flag'));
     }
@@ -60,7 +61,16 @@ class DLab_Auth {
 
         login_header(esc_html__('Přihlášení', 'design-lab'));
 
-        if ($redirect && wp_validate_redirect($redirect, false)) {
+        if (current_user_can('manage_options') || is_super_admin()) {
+            $target = admin_url();
+            if ($this->is_admin_area_redirect($redirect)) {
+                $target = $redirect;
+            }
+            echo '<h2 class="dlab-auth-notice"><a href="' . esc_url($target) . '">';
+            echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.49.42l-.36 2.54c-.59.22-1.13.53-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.5.4 1.04.72 1.63.94l.36 2.54c.05.24.26.42.49.42h3.84c.24 0 .44-.18.5-.42l.36-2.54c.5-.22 1.04-.54 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>';
+            echo esc_html__('Pokračovat do administrace', 'design-lab');
+            echo '</a></h2>';
+        } elseif ($redirect && wp_validate_redirect($redirect, false)) {
             echo '<p class="dlab-auth-notice"><a href="' . esc_url($redirect) . '">' . esc_html__('Pokračovat', 'design-lab') . '</a></p>';
         } else {
             echo '<p class="dlab-auth-notice">' . esc_html__('Jste již přihlášeni.', 'design-lab') . '</p>';
@@ -68,6 +78,13 @@ class DLab_Auth {
 
         login_footer();
         exit;
+    }
+
+    public function enqueue_login_notice_styles() {
+        $css = '#login h2.dlab-auth-notice{font-size:1.35rem;font-weight:600;line-height:1.35;margin:1.25em 0;}'
+            . '#login h2.dlab-auth-notice a{display:inline-flex;align-items:center;gap:.45em;text-decoration:none;}'
+            . '#login h2.dlab-auth-notice svg{width:1.15em;height:1.15em;flex:none;}';
+        wp_add_inline_style('login', $css);
     }
 
     private function is_wp_login_action_request() {
@@ -87,6 +104,13 @@ class DLab_Auth {
 
         $dashboard = self::get_page_url('dashboard') ?: home_url('/muj-ucet-design-lab/');
 
+        if (user_can($user, 'manage_options') || is_super_admin($user->ID)) {
+            if ($this->is_admin_area_redirect($requested_redirect_to)) {
+                return $requested_redirect_to;
+            }
+            return admin_url();
+        }
+
         if ($this->should_honor_login_redirect($requested_redirect_to)) {
             return $requested_redirect_to;
         }
@@ -96,6 +120,14 @@ class DLab_Auth {
         }
 
         return $dashboard;
+    }
+
+    private function is_admin_area_redirect($url) {
+        if (!$url || !wp_validate_redirect($url, false)) {
+            return false;
+        }
+        $admin = untrailingslashit(admin_url());
+        return strpos(untrailingslashit($url), $admin) === 0;
     }
 
     private function should_honor_login_redirect($url) {

@@ -37,12 +37,14 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                         <p class="dlab-checkout__auth-lead">
                             <?php esc_html_e('Rezervace vyžaduje účet. Přihlaste se, nebo pokračujte registrací — účet vytvoříme při potvrzení rezervace.', 'design-lab'); ?>
                         </p>
-                        <p class="dlab-checkout__auth-actions">
-                            <a class="btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($login_url); ?>">
+                        <div class="dlab-checkout__auth-actions">
+                            <a class="btn dlab-btn dlab-btn--solid" href="<?php echo esc_url($login_url); ?>">
                                 <?php esc_html_e('Přihlásit se', 'design-lab'); ?>
                             </a>
-                        </p>
-                        <p class="dlab-checkout__section-label"><?php esc_html_e('Nová registrace', 'design-lab'); ?></p>
+                            <a class="btn dlab-btn dlab-btn--ghost" href="#dlab-checkout-register">
+                                <?php esc_html_e('Nová registrace', 'design-lab'); ?>
+                            </a>
+                        </div>
                     </div>
                 <?php endif; ?>
 
@@ -81,10 +83,14 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                         </div>
                         <?php if ($pass_applied && (float) $summary['discount'] > 0) : ?>
                             <div class="dlab-pass__row dlab-pass__row--discount">
-                                <p class="plain"><span><?php esc_html_e('Design Lab pass', 'design-lab'); ?></span></p>
-                                <p class="plain"><span>−<?php echo esc_html($summary['discount_formatted']); ?></span></p>
+                                <h3 class="dlab-pass__saving"><?php esc_html_e('Design Lab pass', 'design-lab'); ?></h3>
+                                <h3 class="dlab-pass__saving">−<?php echo esc_html($summary['discount_formatted']); ?></h3>
                             </div>
                         <?php endif; ?>
+                        <?php
+                        $dlab_legal = 'storno';
+                        include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
+                        ?>
                         <div class="dlab-pass__row dlab-pass__row--total mar-T-1">
                             <h4 class=""><strong><?php esc_html_e('Celkem', 'design-lab'); ?></strong></h4>
                             <h4 class=""><strong><?php echo esc_html($summary['total_formatted']); ?></strong></h4>
@@ -94,7 +100,7 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                         </div>
                     </div>
 
-                    <fieldset class="dlab-checkout__section">
+                    <fieldset class="dlab-checkout__section" id="dlab-checkout-register">
                         <legend class="dlab-checkout__section-label h4">
                             <?php echo $is_logged_in ? esc_html__('Kontakt', 'design-lab') : esc_html__('Registrační údaje', 'design-lab'); ?>
                         </legend>
@@ -140,7 +146,16 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                     <fieldset class="dlab-checkout__section">
                         <legend class="dlab-checkout__section-label h4"><?php esc_html_e('Platba', 'design-lab'); ?></legend>
                         <p class="dlab-checkout__hint"><?php esc_html_e('Bankovní převod — po odeslání rezervace uvidíte platební údaje a QR kód.', 'design-lab'); ?></p>
+                        <?php
+                        $dlab_legal = 'storno';
+                        include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
+                        ?>
                     </fieldset>
+
+                    <?php
+                    $dlab_legal = 'privacy';
+                    include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
+                    ?>
 
                     <div class="dlab-checkout__consents">
                         <?php if ($terms_page) : ?>
@@ -189,6 +204,15 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                                     );
                                     ?>
                                 </span>
+                            </label>
+                        <?php endif; ?>
+                        <?php
+                        $photo_label = DLab_Settings::legal_photo_label();
+                        if ($photo_label !== '') :
+                            ?>
+                            <label class="dlab-checkbox">
+                                <input type="checkbox" name="agree_photo" value="1">
+                                <span><?php echo esc_html($photo_label); ?></span>
                             </label>
                         <?php endif; ?>
                     </div>

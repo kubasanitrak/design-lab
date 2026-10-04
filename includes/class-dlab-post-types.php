@@ -18,7 +18,7 @@ class DLab_Post_Types {
     const TAX_FIELD = 'dlab_obor';
 
     /** Public filter / tag slugs, in display order. */
-    const AGE_FILTER_SLUGS = array('6-plus', '8-plus', '10-plus');
+    const AGE_FILTER_SLUGS = array('6-plus', '6-plus-rodic', '8-plus', '10-plus');
 
     const TYPE_DESIGNLAB = 'designlab';
 
@@ -118,7 +118,7 @@ class DLab_Post_Types {
     }
 
     public function maybe_seed_default_terms() {
-        if (get_option('dlab_default_terms_seeded')) {
+        if (get_option('dlab_default_terms_seeded') && term_exists('6-plus-rodic', self::TAX_AGE)) {
             return;
         }
         self::seed_default_terms();
@@ -131,9 +131,10 @@ class DLab_Post_Types {
     public static function seed_default_terms() {
         $groups = array(
             self::TAX_AGE => array(
-                '6-plus'  => __('6+', 'design-lab'),
-                '8-plus'  => __('8+', 'design-lab'),
-                '10-plus' => __('10+', 'design-lab'),
+                '6-plus'       => __('6+', 'design-lab'),
+                '6-plus-rodic' => __('6 + rodič', 'design-lab'),
+                '8-plus'       => __('8+', 'design-lab'),
+                '10-plus'      => __('10+', 'design-lab'),
             ),
             self::TAX_FIELD => array(
                 'design' => __('Design', 'design-lab'),

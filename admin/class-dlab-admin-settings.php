@@ -304,6 +304,48 @@ class DLab_Admin_Settings {
                         </td>
                     </tr>
                 </table>
+
+                <h2><?php esc_html_e('Právní texty', 'design-lab'); ?></h2>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_legal_storno"><?php esc_html_e('Storno', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <?php
+                            wp_editor(
+                                DLab_Settings::legal_storno(),
+                                'dlab_legal_storno',
+                                array(
+                                    'textarea_name' => DLab_Settings::OPT_LEGAL_STORNO,
+                                    'textarea_rows' => 6,
+                                    'media_buttons' => false,
+                                    'teeny'         => true,
+                                )
+                            );
+                            ?>
+                            <p class="description"><?php esc_html_e('Zobrazí se na rezervaci, platební rekapitulaci a v detailu rezervace v účtu.', 'design-lab'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_legal_photo"><?php esc_html_e('GDPR — fotografie', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <textarea class="large-text" rows="4" id="dlab_legal_photo" name="<?php echo esc_attr(DLab_Settings::OPT_LEGAL_PHOTO); ?>"><?php echo esc_textarea(DLab_Settings::legal_photo_label()); ?></textarea>
+                            <p class="description"><?php esc_html_e('Nepovinný souhlas na formuláři rezervace. Zaškrtnutí není podmínkou odeslání. Prázdné pole souhlas skryje.', 'design-lab'); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_legal_privacy"><?php esc_html_e('Ochrana osobních údajů', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <textarea class="large-text" rows="6" id="dlab_legal_privacy" name="<?php echo esc_attr(DLab_Settings::OPT_LEGAL_PRIVACY); ?>"><?php echo esc_textarea(DLab_Settings::legal_privacy()); ?></textarea>
+                            <p class="description"><?php esc_html_e('Informační text na rezervaci a platební rekapitulaci. Není to zaškrtávací pole.', 'design-lab'); ?></p>
+                        </td>
+                    </tr>
+                </table>
                 <?php submit_button(); ?>
             </form>
         </div>

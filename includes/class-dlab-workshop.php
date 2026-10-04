@@ -234,17 +234,13 @@ class DLab_Workshop {
             $label  = __('Volná místa', 'design-lab');
         } elseif ($regular_left > 0) {
             $status = 'open';
-            $label  = sprintf(
-                /* translators: %d: remaining regular spots */
-                _n('%d volné místo', '%d volných míst', $regular_left, 'design-lab'),
-                $regular_left
-            );
+            $label  = __('Volná místa', 'design-lab');
         } elseif ($alternate_left > 0) {
             $status = 'alternate';
             $label  = __('Náhradníci', 'design-lab');
         } else {
             $status = 'full';
-            $label  = __('Obsazeno', 'design-lab');
+            $label  = __('Plně obsazeno', 'design-lab');
         }
 
         return array(
@@ -294,7 +290,7 @@ class DLab_Workshop {
         foreach ($terms as $term) {
             echo '<li>';
             if ($args['link']) {
-                $listing = DLab_Settings::listing_page_url();
+                $listing = DLab_Query::with_workshops_anchor(DLab_Settings::listing_page_url());
                 echo '<a href="' . esc_url(add_query_arg(DLab_Query::GET_AGE, $term->slug, $listing)) . '">' . esc_html($term->name) . '</a>';
             } else {
                 echo esc_html($term->name);

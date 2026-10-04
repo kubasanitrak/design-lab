@@ -12,8 +12,20 @@ class DLab_Public {
     private static $enqueued = false;
 
     public function __construct() {
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_widget_style'), 19);
         add_action('wp_enqueue_scripts', array($this, 'maybe_enqueue_assets'), 20);
         add_action('wp_footer', array($this, 'maybe_enqueue_assets_late'), 1);
+        add_action('wp_footer', array($this, 'render_pass_widget'), 20);
+    }
+
+    /**
+     * The pass link is on every front-end page, so its CSS loads everywhere.
+     */
+    public function enqueue_widget_style() {
+        if (is_admin()) {
+            return;
+        }
+        $this->enqueue_style();
     }
 
     public function maybe_enqueue_assets() {
@@ -73,13 +85,7 @@ class DLab_Public {
             return;
         }
         self::$enqueued = true;
-
-        wp_enqueue_style(
-            'dlab-public',
-            DLAB_PLUGIN_URL . 'public/css/public.css',
-            array(),
-            DLAB_VERSION
-        );
+        $this->enqueue_style();
 
         wp_enqueue_script(
             'dlab-public',
@@ -114,5 +120,46 @@ class DLab_Public {
                 'confirm_reschedule'=> __('Opravdu přesunout na vybraný workshop?', 'design-lab'),
             ),
         ));
+    }
+
+    private function enqueue_style() {
+        if (wp_style_is('dlab-public', 'enqueued')) {
+            return;
+        }
+        wp_enqueue_style(
+            'dlab-public',
+            DLAB_PLUGIN_URL . 'public/css/public.css',
+            array(),
+            DLAB_VERSION
+        );
+    }
+
+    /**
+     * Fixed link to checkout. Label opens on hover; no basket overlay.
+     */
+    public function render_pass_widget() {
+        if (is_admin() || is_feed()) {
+            return;
+        }
+
+        $checkout_id = DLab_Settings::checkout_page_id();
+        if ($checkout_id && is_page($checkout_id)) {
+            return;
+        }
+
+        $url   = DLab_Settings::checkout_page_url();
+        $count = class_exists('DLab_Basket') ? (int) DLab_Basket::current_count() : 0;
+        ?>
+        <a class="dlab-pass-widget" href="<?php echo esc_url($url); ?>">
+            <span class="dlab-pass-widget__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" focusable="false">
+                    <path stroke-linejoin="round" d="M5 7.2h14v2.1a1.7 1.7 0 0 0 0 3.2v2.3H5v-2.3a1.7 1.7 0 0 0 0-3.2V7.2z"/>
+                    <path stroke-linecap="round" stroke-dasharray="1.4 2.2" d="M9.2 8.6v6.6"/>
+                </svg>
+            </span>
+            <span class="dlab-pass-widget__label"><?php esc_html_e('můj design pass', 'design-lab'); ?></span>
+            <span class="dlab-pass-widget__count" data-dlab-pass-widget-count <?php echo $count > 0 ? '' : 'hidden'; ?>><?php echo esc_html((string) $count); ?></span>
+        </a>
+        <?php
     }
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.8]
+
+- Floating “můj design pass” link to checkout, capacity shown as volná místa / plně obsazeno, age tag 6 + rodič, checkout legal texts, and payment details with QR in the booking e-mail.
+
 ## [0.6.7]
 
 - Age badge: pink background with dark text; pass button full-width with Jokker type.

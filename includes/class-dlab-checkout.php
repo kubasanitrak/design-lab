@@ -128,6 +128,10 @@ class DLab_Checkout {
             $this->sync_logged_in_profile($user_id, $contact);
         }
 
+        if (!empty($contact['photo_consent'])) {
+            update_user_meta($user_id, 'dlab_photo_consent_at', current_time('mysql'));
+        }
+
         $order_id = self::create_order($contact, $user_id);
         if (is_wp_error($order_id)) {
             wp_send_json_error(array('message' => $order_id->get_error_message()));
@@ -207,10 +211,11 @@ class DLab_Checkout {
         }
 
         return array(
-            'name'      => $name,
-            'email'     => $email,
-            'phone'     => $phone,
-            'attendees' => $attendees,
+            'name'          => $name,
+            'email'         => $email,
+            'phone'         => $phone,
+            'attendees'     => $attendees,
+            'photo_consent' => empty($post['agree_photo']) ? 0 : 1,
         );
     }
 

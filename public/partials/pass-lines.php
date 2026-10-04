@@ -118,10 +118,10 @@ $listing_url   = DLab_Settings::listing_page_url();
                 <span><?php esc_html_e('Bez passu', 'design-lab'); ?></span>
                 <span><?php echo esc_html($summary['list_formatted']); ?></span>
             </p>
-            <p class="dlab-pass__row dlab-pass__row--discount">
-                <span><?php esc_html_e('Design Lab pass', 'design-lab'); ?></span>
-                <span>−<?php echo esc_html($summary['discount_formatted']); ?></span>
-            </p>
+            <div class="dlab-pass__row dlab-pass__row--discount">
+                <h3 class="dlab-pass__saving"><?php esc_html_e('Design Lab pass', 'design-lab'); ?></h3>
+                <h3 class="dlab-pass__saving">−<?php echo esc_html($summary['discount_formatted']); ?></h3>
+            </div>
         <?php elseif ($pass_applied) : ?>
             <p class="dlab-pass__hint"><?php esc_html_e('Cena Design Lab passu je započítána.', 'design-lab'); ?></p>
         <?php endif; ?>
