@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$listing_url  = DLab_Settings::listing_page_url();
+$listing_url  = DLab_Query::with_workshops_anchor(DLab_Settings::listing_page_url());
 $checkout_url = DLab_Settings::checkout_page_url();
 ?>
 <div data-theme="DD-beige" class="section scroll-trigger section-content section-full-width">

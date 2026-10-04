@@ -89,6 +89,7 @@
   align-items: flex-start;
   gap: calc(var(--gap) * 0.5);
   margin-block: calc(var(--gap) * -0.5) calc(var(--gap) * 0.75);
+  margin-top: calc(var(--pad-T) * 0.2);
 }
 @media screen and (orientation: landscape) {
   .dlab-card .dlab-card__meta {
@@ -444,6 +445,9 @@
   margin-top: calc(var(--gap) * 0.35);
   cursor: pointer;
 }
+.dlab-checkbox input {
+  margin-top: calc(var(--pad-T) * 0.15);
+}
 
 .dlab-service-price {
   font-size: calc(12px + 0 * (100vw - 320px) / 2240);
@@ -654,6 +658,9 @@
   gap: calc(var(--gap) * 0.5);
   margin: 0 0 calc(var(--pad-T) * 1.2);
 }
+.dlab-checkout__consents span {
+  max-width: 38em;
+}
 .dlab-checkout__submit {
   margin-top: calc(var(--pad-T) * 0.5);
 }
@@ -731,6 +738,7 @@
   margin: 0 0 calc(var(--gap) * 0.35);
 }
 .dlab-legal__body {
+  max-width: 48em;
   font-size: calc(12px + 2 * (100vw - 320px) / 2240);
 }
 .dlab-legal__body p:last-child {

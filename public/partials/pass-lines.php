@@ -15,14 +15,12 @@ $pass_applied  = !empty($summary['pass_applied']);
 $pass_min      = (int) ($summary['pass_min'] ?? 2);
 $count         = (int) ($summary['count'] ?? 0);
 $needed        = max(0, $pass_min - $count);
-$listing_url   = DLab_Settings::listing_page_url();
+$listing_url   = DLab_Query::with_workshops_anchor(DLab_Settings::listing_page_url());
 ?>
 <?php if (empty($items)) : ?>
     <div class="dlab-pass__empty">
         <p class="dlab-empty"><?php esc_html_e('Pass je prázdný.', 'design-lab'); ?></p>
-        <a class="btn dlab-btn" href="<?php echo esc_url($listing_url); ?>">
-            <?php esc_html_e('Vybrat workshopy', 'design-lab'); ?>
-        </a>
+        <a class="wp-block-button__link has-dd-black-color has-dd-white-background-color has-text-color has-background has-link-color btn dlab-btn dlab-btn--ghost" href="<?php echo esc_url($listing_url); ?>">&larr;&nbsp;&nbsp;<?php esc_html_e('Vybrat workshopy', 'design-lab'); ?> </a>
     </div>
 <?php else : ?>
     <div class="dlab-pass__spots">

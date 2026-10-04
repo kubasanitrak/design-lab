@@ -99,7 +99,7 @@ class DLab_Public {
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('dlab_public'),
             'pass_url'     => DLab_Settings::pass_page_url(),
-            'listing_url'  => DLab_Settings::listing_page_url(),
+            'listing_url'  => DLab_Query::with_workshops_anchor(DLab_Settings::listing_page_url()),
             'checkout_url' => DLab_Settings::checkout_page_url(),
             'in_pass'      => DLab_Basket::current_in_pass_ids(),
             'count'        => DLab_Basket::current_count(),

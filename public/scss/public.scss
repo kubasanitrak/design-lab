@@ -110,6 +110,7 @@
 		gap: calc(var(--gap) * 0.5);
 		// margin-bottom: calc(var(--gap) * 0.75);
 		margin-block: calc(var(--gap) * -.5) calc(var(--gap) * 0.75);
+		margin-top: calc(var(--pad-T) * .2);
 		@include mq(mq-land) {
 			margin-bottom: 0;
 		}
@@ -522,6 +523,10 @@
 	gap: calc(var(--gap) * 0.4);
 	margin-top: calc(var(--gap) * 0.35);
 	cursor: pointer;
+
+	input {
+		margin-top: calc(var(--pad-T) * .15);
+	}
 }
 
 .dlab-service-price {
@@ -760,6 +765,10 @@
 		flex-direction: column;
 		gap: calc(var(--gap) * 0.5);
 		margin: 0 0 calc(var(--pad-T) * 1.2);
+
+		span {
+			max-width: 38em;
+		}
 	}
 
 	&__submit {
@@ -856,6 +865,7 @@
 	}
 
 	&__body {
+		max-width: 48em;
 		font-size: $fz-PLAIN;
 
 		p:last-child {
