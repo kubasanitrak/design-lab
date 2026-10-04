@@ -135,19 +135,19 @@ class DLab_Public {
     }
 
     /**
-     * Fixed link to checkout. Label opens on hover; no basket overlay.
+     * Fixed link to the pass editor. Label opens on hover; no basket overlay.
      */
     public function render_pass_widget() {
         if (is_admin() || is_feed()) {
             return;
         }
 
-        $checkout_id = DLab_Settings::checkout_page_id();
-        if ($checkout_id && is_page($checkout_id)) {
+        $pass_id = DLab_Settings::pass_page_id();
+        if ($pass_id && is_page($pass_id)) {
             return;
         }
 
-        $url   = DLab_Settings::checkout_page_url();
+        $url   = DLab_Settings::pass_page_url();
         $count = class_exists('DLab_Basket') ? (int) DLab_Basket::current_count() : 0;
         ?>
         <a class="dlab-pass-widget" href="<?php echo esc_url($url); ?>">
