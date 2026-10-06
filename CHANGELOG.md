@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.12]
+
+- Attendee hint on the reservation form is editable under Právní texty.
+
 ## [0.6.11]
 
 - Pass widget stays expanded (icon hidden, larger type). Workshop detail repeats “Zpět na Design Lab”. Admin can set reservation status; Zaplaceno e-mails a confirmation recap to the customer and the Design Lab notification address.

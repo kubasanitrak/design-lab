@@ -37,9 +37,10 @@ class DLab_Settings {
     const OPT_ADMIN_NOTIFICATION_ENABLED = 'dlab_admin_notification_enabled';
     const OPT_ADMIN_NOTIFICATION_EMAIL    = 'dlab_admin_notification_email';
 
-    const OPT_LEGAL_STORNO  = 'dlab_legal_storno';
-    const OPT_LEGAL_PHOTO   = 'dlab_legal_photo';
-    const OPT_LEGAL_PRIVACY = 'dlab_legal_privacy';
+    const OPT_LEGAL_STORNO    = 'dlab_legal_storno';
+    const OPT_LEGAL_PHOTO     = 'dlab_legal_photo';
+    const OPT_LEGAL_PRIVACY   = 'dlab_legal_privacy';
+    const OPT_LEGAL_ATTENDEES = 'dlab_legal_attendees';
 
     public function __construct() {
         add_action('admin_init', array($this, 'register_settings'));
@@ -73,6 +74,7 @@ class DLab_Settings {
             self::OPT_LEGAL_STORNO               => self::default_legal_storno(),
             self::OPT_LEGAL_PHOTO                => self::default_legal_photo(),
             self::OPT_LEGAL_PRIVACY              => self::default_legal_privacy(),
+            self::OPT_LEGAL_ATTENDEES            => self::default_legal_attendees(),
         );
     }
 
@@ -317,6 +319,10 @@ class DLab_Settings {
         return __('Registrací dítěte na Design Lab dáváte, jakožto zákonný zástupce, svobodný a dobrovolný souhlas se zpracováním osobních údajů. Při nakládání s osobními údaji obsaženými v této přihlášce se bude postupovat v souladu s Nařízením Evropského parlamentu a Rady (EU) 2016/679 ze dne 27. dubna 2016 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů a o volném pohybu těchto údajů a o zrušení směrnice 95/46/ES.', 'design-lab');
     }
 
+    public static function default_legal_attendees() {
+        return __('Stejní účastníci platí pro všechny workshopy v rezervaci.', 'design-lab');
+    }
+
     public static function legal_storno() {
         $value = get_option(self::OPT_LEGAL_STORNO, false);
         return $value === false ? self::default_legal_storno() : (string) $value;
@@ -330,6 +336,14 @@ class DLab_Settings {
     public static function legal_privacy() {
         $value = get_option(self::OPT_LEGAL_PRIVACY, false);
         return $value === false ? self::default_legal_privacy() : (string) $value;
+    }
+
+    /**
+     * Hint above the attendee fields. Empty when the setting is cleared.
+     */
+    public static function legal_attendees() {
+        $value = get_option(self::OPT_LEGAL_ATTENDEES, false);
+        return $value === false ? self::default_legal_attendees() : trim((string) $value);
     }
 
     /**
@@ -471,6 +485,10 @@ class DLab_Settings {
             'sanitize_callback' => 'sanitize_textarea_field',
         ));
         register_setting('dlab_settings', self::OPT_LEGAL_PRIVACY, array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_textarea_field',
+        ));
+        register_setting('dlab_settings', self::OPT_LEGAL_ATTENDEES, array(
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_textarea_field',
         ));

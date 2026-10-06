@@ -87,10 +87,6 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                                 <h3 class="dlab-pass__saving">−<?php echo esc_html($summary['discount_formatted']); ?></h3>
                             </div>
                         <?php endif; ?>
-                        <?php
-                        $dlab_legal = 'storno';
-                        include DLAB_PLUGIN_DIR . 'public/partials/legal-statement.php';
-                        ?>
                         <div class="dlab-pass__row dlab-pass__row--total mar-T-1">
                             <h4 class=""><strong><?php esc_html_e('Celkem', 'design-lab'); ?></strong></h4>
                             <h4 class=""><strong><?php echo esc_html($summary['total_formatted']); ?></strong></h4>
@@ -126,7 +122,12 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
 
                     <fieldset class="dlab-checkout__section">
                         <legend class="dlab-checkout__section-label h4"><?php esc_html_e('Účastníci', 'design-lab'); ?></legend>
-                        <p class="dlab-checkout__hint minor"><?php esc_html_e('Stejní účastníci platí pro všechny workshopy v rezervaci.', 'design-lab'); ?></p>
+                        <?php
+                        $attendees_hint = DLab_Settings::legal_attendees();
+                        if ($attendees_hint !== '') :
+                            ?>
+                            <p class="dlab-checkout__hint minor"><?php echo esc_html($attendees_hint); ?></p>
+                        <?php endif; ?>
                         <?php for ($i = 0; $i < $spots; $i++) : ?>
                             <div class="dlab-checkout__field">
                                 <label for="dlab-attendee-<?php echo esc_attr((string) $i); ?>">

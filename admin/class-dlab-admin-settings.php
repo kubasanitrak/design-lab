@@ -345,6 +345,15 @@ class DLab_Admin_Settings {
                             <p class="description"><?php esc_html_e('Informační text na rezervaci a platební rekapitulaci. Není to zaškrtávací pole.', 'design-lab'); ?></p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="dlab_legal_attendees"><?php esc_html_e('Účastníci', 'design-lab'); ?></label>
+                        </th>
+                        <td>
+                            <textarea class="large-text" rows="3" id="dlab_legal_attendees" name="<?php echo esc_attr(DLab_Settings::OPT_LEGAL_ATTENDEES); ?>"><?php echo esc_textarea(DLab_Settings::legal_attendees()); ?></textarea>
+                            <p class="description"><?php esc_html_e('Text nad seznamem účastníků na rezervaci. Prázdné pole text skryje.', 'design-lab'); ?></p>
+                        </td>
+                    </tr>
                 </table>
                 <?php submit_button(); ?>
             </form>
