@@ -26,7 +26,7 @@ $listing_url   = DLab_Query::with_workshops_anchor(DLab_Settings::listing_page_u
     <div class="dlab-pass__spots">
         <label class="h4 wp-block-heading has-text-align-left" for="dlab-pass-spots"><strong><?php esc_html_e('Počet účastníků', 'design-lab'); ?></strong></label>
         
-        <p class="dlab-pass__spots-hint minor"><?php esc_html_e('Stejný počet platí pro všechny workshopy v passu.', 'design-lab'); ?></p>
+        <p class="dlab-pass__spots-hint"><?php esc_html_e('Stejný počet platí pro všechny workshopy v passu.', 'design-lab'); ?></p>
         <div class="dlab-quantity">
             <input type="number" id="dlab-pass-spots" class="dlab-pass-spots" min="1" max="20" value="<?php echo esc_attr((string) $spots); ?>" inputmode="numeric">
             <div class="dlab-quantity-nav">

@@ -109,7 +109,7 @@
 		// justify-content: flex-start;
 		gap: calc(var(--gap) * 0.5);
 		// margin-bottom: calc(var(--gap) * 0.75);
-		margin-block: calc(var(--gap) * -.5) calc(var(--gap) * 0.75);
+		margin-block: calc(var(--gap) * .35) calc(var(--gap) * 0.75);
 		margin-top: calc(var(--pad-T) * .2);
 		@include mq(mq-land) {
 			margin-bottom: 0;
@@ -431,7 +431,7 @@
 		display: flex;
 		justify-content: space-between;
 		gap: var(--gap);
-		margin: 0 0 calc(var(--gap) * 0.35);
+		margin: calc(var(--gap) * 0.35) 0;
 
 		&--discount {
 			align-items: baseline;
@@ -881,18 +881,19 @@
 	bottom: 24px;
 	display: inline-flex;
 	align-items: center;
-	height: 60px;
-	padding: 0 18px;
+	height: 90px;
+	padding: 0 27px;
 	border-radius: 999px;
 	background: var(--DD-black, #000);
 	color: var(--DD-white, #fff);
 	text-decoration: none;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	font-size: calc(18px + (21 - 18) * ((100vw - 320px) / (2560 - 320)));
 
 	&__icon {
-		display: flex;
-		width: 24px;
-		height: 24px;
+		display: none;
+		width: 36px;
+		height: 36px;
 		flex: none;
 
 		svg {
@@ -902,26 +903,25 @@
 	}
 
 	&__label {
-		max-width: 0;
+		max-width: none;
 		margin-left: 0;
-		overflow: hidden;
+		overflow: visible;
 		white-space: nowrap;
-		opacity: 0;
-		font-size: $fz-PLAIN;
-		transition: max-width 0.25s ease, opacity 0.2s ease, margin-left 0.25s ease;
+		opacity: 1;
+		font-size: inherit;
 	}
 
 	&__count {
 		position: absolute;
-		top: -4px;
-		right: -4px;
-		min-width: 22px;
-		height: 22px;
-		padding: 0 5px;
+		top: -6px;
+		right: -6px;
+		min-width: 33px;
+		height: 33px;
+		padding: 0 8px;
 		border-radius: 20vh;
 		background: var(--DD-pink, #ffbedf);
 		color: var(--DD-black, #000);
-		font-size: 12px;
+		font-size: 18px;
 		font-weight: 700;
 		display: flex;
 		align-items: center;
@@ -935,11 +935,5 @@
 	&:hover,
 	&:focus-visible {
 		color: var(--DD-white, #fff);
-
-		.dlab-pass-widget__label {
-			max-width: 12rem;
-			margin-left: 0.65rem;
-			opacity: 1;
-		}
 	}
 }

@@ -36,6 +36,18 @@
   background: #c7eed4;
 }
 
+.dlab-status-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+
+.dlab-status-form select {
+  max-width: 9.5rem;
+}
+
 .dlab-status--cancelled,
 .dlab-status--expired,
 .dlab-status--failed {

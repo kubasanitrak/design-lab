@@ -752,18 +752,19 @@
   bottom: 24px;
   display: inline-flex;
   align-items: center;
-  height: 60px;
-  padding: 0 18px;
+  height: 90px;
+  padding: 0 27px;
   border-radius: 999px;
   background: var(--DD-black, #000);
   color: var(--DD-white, #fff);
   text-decoration: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: calc(18px + 3 * (100vw - 320px) / 2240);
 }
 .dlab-pass-widget__icon {
-  display: flex;
-  width: 24px;
-  height: 24px;
+  display: none;
+  width: 36px;
+  height: 36px;
   flex: none;
 }
 .dlab-pass-widget__icon svg {
@@ -771,25 +772,24 @@
   height: 100%;
 }
 .dlab-pass-widget__label {
-  max-width: 0;
+  max-width: none;
   margin-left: 0;
-  overflow: hidden;
+  overflow: visible;
   white-space: nowrap;
-  opacity: 0;
-  font-size: calc(12px + 2 * (100vw - 320px) / 2240);
-  transition: max-width 0.25s ease, opacity 0.2s ease, margin-left 0.25s ease;
+  opacity: 1;
+  font-size: inherit;
 }
 .dlab-pass-widget__count {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 5px;
+  top: -6px;
+  right: -6px;
+  min-width: 33px;
+  height: 33px;
+  padding: 0 8px;
   border-radius: 20vh;
   background: var(--DD-pink, #ffbedf);
   color: var(--DD-black, #000);
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -800,11 +800,6 @@
 }
 .dlab-pass-widget:hover, .dlab-pass-widget:focus-visible {
   color: var(--DD-white, #fff);
-}
-.dlab-pass-widget:hover .dlab-pass-widget__label, .dlab-pass-widget:focus-visible .dlab-pass-widget__label {
-  max-width: 12rem;
-  margin-left: 0.65rem;
-  opacity: 1;
 }
 
 /*# sourceMappingURL=public.css.map */

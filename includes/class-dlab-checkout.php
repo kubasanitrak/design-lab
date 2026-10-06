@@ -498,14 +498,103 @@ class DLab_Checkout {
 
     public static function status_label($status) {
         $labels = array(
-            'pending'          => __('Čeká', 'design-lab'),
-            'awaiting_payment' => __('Čeká na platbu', 'design-lab'),
+            'pending'          => __('Pending', 'design-lab'),
+            'awaiting_payment' => __('Pending', 'design-lab'),
             'paid'             => __('Zaplaceno', 'design-lab'),
             'cancelled'        => __('Zrušeno', 'design-lab'),
             'expired'          => __('Vypršelo', 'design-lab'),
             'failed'           => __('Neúspěšné', 'design-lab'),
         );
         return isset($labels[$status]) ? $labels[$status] : $status;
+    }
+
+    /**
+     * Statuses an admin can assign from the Rezervace overview.
+     *
+     * @return array<string,string>
+     */
+    public static function admin_status_options() {
+        return array(
+            'awaiting_payment' => __('Pending', 'design-lab'),
+            'cancelled'        => __('Zrušeno', 'design-lab'),
+            'paid'             => __('Zaplaceno', 'design-lab'),
+            'expired'          => __('Vypršelo', 'design-lab'),
+        );
+    }
+
+    /**
+     * Assign a reservation status from wp-admin.
+     * Zaplaceno confirms spots and sends the confirmation e-mail.
+     * Vypršelo is also set by cron when the payment window ends.
+     *
+     * @return true|'unchanged'|WP_Error
+     */
+    public static function admin_set_status($order_id, $status) {
+        global $wpdb;
+
+        $order_id = (int) $order_id;
+        $status   = sanitize_key($status);
+        $order    = self::get_order($order_id);
+
+        if (!$order) {
+            return new WP_Error('dlab_missing', __('Rezervace nebyla nalezena.', 'design-lab'));
+        }
+
+        if (!isset(self::admin_status_options()[$status])) {
+            return new WP_Error('dlab_status', __('Neplatný stav rezervace.', 'design-lab'));
+        }
+
+        if ($order->status === $status || ($status === 'awaiting_payment' && $order->status === 'pending')) {
+            return 'unchanged';
+        }
+
+        $released = array('cancelled', 'expired', 'failed');
+
+        if ($status === 'paid') {
+            if (in_array($order->status, $released, true)) {
+                DLab_Capacity::reopen_order_spots($order_id, DLab_Capacity::STATUS_HELD);
+            }
+            self::update_order_status($order_id, 'paid');
+            DLab_Emails::send_payment_confirmed_email($order_id);
+            return true;
+        }
+
+        if (in_array($status, array('cancelled', 'expired'), true)) {
+            self::update_order_status($order_id, $status);
+            if ($order->status === 'paid') {
+                self::clear_paid_at($order_id);
+            }
+            return true;
+        }
+
+        if (in_array($order->status, $released, true)) {
+            DLab_Capacity::reopen_order_spots($order_id, DLab_Capacity::STATUS_HELD);
+        } elseif ($order->status === 'paid') {
+            DLab_Capacity::unconfirm_order_spots($order_id);
+            self::clear_paid_at($order_id);
+        }
+
+        self::update_order_status($order_id, 'awaiting_payment');
+
+        $hours = DLab_Settings::reservation_expiry_hours();
+        $wpdb->query($wpdb->prepare(
+            "UPDATE {$wpdb->prefix}dlab_orders
+             SET expires_at = %s, expiry_notified_at = NULL
+             WHERE id = %d",
+            wp_date('Y-m-d H:i:s', time() + ($hours * HOUR_IN_SECONDS)),
+            $order_id
+        ));
+
+        return true;
+    }
+
+    private static function clear_paid_at($order_id) {
+        global $wpdb;
+
+        $wpdb->query($wpdb->prepare(
+            "UPDATE {$wpdb->prefix}dlab_orders SET paid_at = NULL WHERE id = %d",
+            (int) $order_id
+        ));
     }
 
     /**

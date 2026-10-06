@@ -205,6 +205,109 @@ class DLab_Capacity {
         );
     }
 
+    /**
+     * Move confirmed spots back to held (admin set the order back to Pending).
+     */
+    public static function unconfirm_order_spots($order_id) {
+        global $wpdb;
+
+        if (!DLab_DB::table_exists('dlab_booking_spots')) {
+            return;
+        }
+
+        $wpdb->update(
+            $wpdb->prefix . 'dlab_booking_spots',
+            array('status' => self::STATUS_HELD),
+            array('order_id' => (int) $order_id, 'status' => self::STATUS_CONFIRMED),
+            array('%s'),
+            array('%d', '%s')
+        );
+    }
+
+    /**
+     * Bring released spots back when an admin reopens a reservation.
+     */
+    public static function reopen_order_spots($order_id, $status = null) {
+        global $wpdb;
+
+        if (!DLab_DB::table_exists('dlab_booking_spots')) {
+            return;
+        }
+
+        $order_id = (int) $order_id;
+        $status   = $status ?: self::STATUS_HELD;
+        if (!in_array($status, array(self::STATUS_HELD, self::STATUS_CONFIRMED), true)) {
+            $status = self::STATUS_HELD;
+        }
+
+        $table   = $wpdb->prefix . 'dlab_booking_spots';
+        $revived = $wpdb->query($wpdb->prepare(
+            "UPDATE $table SET status = %s WHERE order_id = %d AND status = %s",
+            $status,
+            $order_id,
+            self::STATUS_CANCELLED
+        ));
+
+        if ($revived) {
+            return;
+        }
+
+        $active = (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table WHERE order_id = %d AND status IN (%s, %s)",
+            $order_id,
+            self::STATUS_HELD,
+            self::STATUS_CONFIRMED
+        ));
+
+        if ($active > 0) {
+            if ($status === self::STATUS_CONFIRMED) {
+                self::confirm_order_spots($order_id);
+            }
+            return;
+        }
+
+        if (!DLab_DB::table_exists('dlab_orders') || !DLab_DB::table_exists('dlab_order_items')) {
+            return;
+        }
+
+        $order = $wpdb->get_row($wpdb->prepare(
+            "SELECT user_id, spots, contact_data FROM {$wpdb->prefix}dlab_orders WHERE id = %d",
+            $order_id
+        ));
+        if (!$order) {
+            return;
+        }
+
+        $contact   = json_decode((string) $order->contact_data, true);
+        $attendees = (is_array($contact) && isset($contact['attendees']) && is_array($contact['attendees']))
+            ? $contact['attendees']
+            : array();
+        $items     = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}dlab_order_items WHERE order_id = %d",
+            $order_id
+        ));
+
+        if (!is_array($items)) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            $meta      = json_decode((string) $item->line_meta, true);
+            $spot_type = (is_array($meta) && !empty($meta['spot_type'])) ? $meta['spot_type'] : self::SPOT_REGULAR;
+            self::create_holds_from_line(
+                $order_id,
+                (int) $item->id,
+                (int) $item->object_id,
+                $item->object_type,
+                (int) $order->user_id,
+                max(1, (int) $order->spots),
+                $spot_type,
+                $attendees,
+                $status
+            );
+        }
+    }
+
     public static function release_item_spots($order_item_id) {
         global $wpdb;
 

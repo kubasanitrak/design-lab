@@ -266,25 +266,181 @@ class DLab_Emails {
         }
 
         $contact = DLab_Checkout::contact_from_order($order);
-        if ($contact['email'] === '' || !is_email($contact['email'])) {
+        $blog    = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
+        $is_html = DLab_Settings::email_template_type() === 'html';
+        $sent    = false;
+
+        if ($contact['email'] !== '' && is_email($contact['email'])) {
+            $subject = sprintf(
+                /* translators: 1: site name, 2: order number */
+                __('[%1$s] Potvrzení rezervace %2$s', 'design-lab'),
+                $blog,
+                $order->order_number
+            );
+            $body = $is_html
+                ? self::payment_confirmed_html($order, $contact, false)
+                : self::payment_confirmed_plain($order, $contact, false);
+            $sent = (bool) self::mail($contact['email'], $subject, $body, $is_html);
+        }
+
+        self::notify_admin_payment_confirmed($order, $contact, $blog, $is_html);
+
+        return $sent;
+    }
+
+    private static function notify_admin_payment_confirmed($order, array $contact, $blog, $is_html) {
+        $email = DLab_Settings::admin_notification_email();
+        if ($email === '' || !is_email($email)) {
             return false;
         }
 
-        $blog    = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
+        if ($contact['email'] !== '' && strcasecmp($email, $contact['email']) === 0) {
+            return false;
+        }
+
         $subject = sprintf(
             /* translators: 1: site name, 2: order number */
-            __('[%1$s] Platba přijata – %2$s', 'design-lab'),
+            __('[%1$s] Rezervace %2$s zaplacena', 'design-lab'),
             $blog,
             $order->order_number
         );
-        $body = sprintf(
-            /* translators: 1: name, 2: order number */
-            __("Dobrý den %1\$s,\n\nplatba za rezervaci %2\$s byla přijata. Rezervace je potvrzena.\n", 'design-lab'),
-            $contact['name'] !== '' ? $contact['name'] : $contact['email'],
-            $order->order_number
-        );
+        $body = $is_html
+            ? self::payment_confirmed_html($order, $contact, true)
+            : self::payment_confirmed_plain($order, $contact, true);
 
-        return self::mail($contact['email'], $subject, $body);
+        return self::mail($email, $subject, $body, $is_html);
+    }
+
+    private static function payment_confirmed_plain($order, array $contact, $for_admin) {
+        $name  = $contact['name'] !== '' ? $contact['name'] : $contact['email'];
+        $intro = $for_admin
+            ? sprintf(
+                /* translators: 1: order number, 2: customer name, 3: customer email */
+                __("Rezervace %1\$s byla označena jako zaplacená.\n\nZákazník: %2\$s\nE-mail: %3\$s\n", 'design-lab'),
+                $order->order_number,
+                $name,
+                $contact['email']
+            )
+            : sprintf(
+                /* translators: 1: name, 2: order number */
+                __("Dobrý den %1\$s,\n\nvaše rezervace %2\$s je potvrzena. Platba byla přijata.\n", 'design-lab'),
+                $name,
+                $order->order_number
+            );
+
+        return $intro . "\n" . self::order_recap_plain($order)
+            . "\n" . sprintf(
+                /* translators: %s: formatted total */
+                __('Celkem: %s', 'design-lab'),
+                DLab_Workshop::format_price($order->total)
+            ) . "\n";
+    }
+
+    private static function payment_confirmed_html($order, array $contact, $for_admin) {
+        $name = $contact['name'] !== '' ? $contact['name'] : $contact['email'];
+        if ($for_admin) {
+            $intro = sprintf(
+                /* translators: 1: order number, 2: customer name, 3: customer email */
+                __('Rezervace %1$s byla označena jako zaplacená. Zákazník: %2$s (%3$s).', 'design-lab'),
+                $order->order_number,
+                $name,
+                $contact['email']
+            );
+        } else {
+            $intro = sprintf(
+                /* translators: 1: name, 2: order number */
+                __('Dobrý den %1$s, vaše rezervace %2$s je potvrzena. Platba byla přijata.', 'design-lab'),
+                $name,
+                $order->order_number
+            );
+        }
+
+        return '<div style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;color:#111;">'
+            . '<p style="margin:0 0 16px;">' . esc_html($intro) . '</p>'
+            . self::order_recap_html($order)
+            . '<p style="margin:16px 0 0;"><strong>' . esc_html__('Celkem', 'design-lab') . '</strong> '
+            . esc_html(DLab_Workshop::format_price($order->total)) . '</p>'
+            . '</div>';
+    }
+
+    /**
+     * Workshop name, date, time and place for each line.
+     */
+    private static function order_recap_plain($order) {
+        $blocks = array();
+        foreach (self::order_recap_rows($order) as $row) {
+            $lines = array($row['title']);
+            if ($row['date'] !== '') {
+                $lines[] = __('Datum', 'design-lab') . ': ' . $row['date'];
+            }
+            if ($row['time'] !== '') {
+                $lines[] = __('Čas', 'design-lab') . ': ' . $row['time'];
+            }
+            if ($row['place'] !== '') {
+                $lines[] = __('Místo', 'design-lab') . ': ' . $row['place'];
+            }
+            $blocks[] = implode("\n", $lines);
+        }
+
+        return implode("\n\n", $blocks);
+    }
+
+    private static function order_recap_html($order) {
+        $html = '';
+        foreach (self::order_recap_rows($order) as $row) {
+            $html .= '<p style="margin:0 0 16px;"><strong>' . esc_html($row['title']) . '</strong>';
+            if ($row['date'] !== '') {
+                $html .= '<br>' . esc_html(__('Datum', 'design-lab') . ': ' . $row['date']);
+            }
+            if ($row['time'] !== '') {
+                $html .= '<br>' . esc_html(__('Čas', 'design-lab') . ': ' . $row['time']);
+            }
+            if ($row['place'] !== '') {
+                $html .= '<br>' . esc_html(__('Místo', 'design-lab') . ': ' . $row['place']);
+            }
+            $html .= '</p>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @return array<int,array{title:string,date:string,time:string,place:string}>
+     */
+    private static function order_recap_rows($order) {
+        $rows = array();
+        if (empty($order->items) || !is_array($order->items)) {
+            return $rows;
+        }
+
+        foreach ($order->items as $item) {
+            $post_id = (int) $item->object_id;
+            $from    = DLab_Workshop::format_time(DLab_Workshop::get_time_from($post_id));
+            $to      = DLab_Workshop::format_time(DLab_Workshop::get_time_to($post_id));
+            $time    = '';
+            if ($from && $to) {
+                $time = $from . '–' . $to;
+            } elseif ($from) {
+                $time = $from;
+            }
+
+            $place = '';
+            if (function_exists('get_field')) {
+                $raw = get_field('place_text', $post_id);
+                if (is_string($raw)) {
+                    $place = trim(wp_strip_all_tags($raw));
+                }
+            }
+
+            $rows[] = array(
+                'title' => (string) $item->post_title,
+                'date'  => DLab_Workshop::format_date(DLab_Workshop::get_workshop_date($post_id)),
+                'time'  => $time,
+                'place' => $place,
+            );
+        }
+
+        return $rows;
     }
 
     public static function send_expiry_notification($order_id) {

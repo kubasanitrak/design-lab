@@ -135,7 +135,7 @@ class DLab_Public {
     }
 
     /**
-     * Fixed link to the pass editor. Label opens on hover; no basket overlay.
+     * Fixed link to the pass editor. Label stays visible; icon is hidden for now.
      */
     public function render_pass_widget() {
         if (is_admin() || is_feed()) {

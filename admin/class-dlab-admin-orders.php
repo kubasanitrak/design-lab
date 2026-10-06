@@ -32,6 +32,11 @@ class DLab_Admin_Orders {
     }
 
     public function handle_actions() {
+        if (isset($_POST['dlab_set_status'], $_POST['order_id'], $_POST['status'], $_POST['_wpnonce'])) {
+            $this->handle_set_status();
+            return;
+        }
+
         if (!isset($_GET['dlab_action'], $_GET['order_id'], $_GET['_wpnonce'])) {
             return;
         }
@@ -72,6 +77,47 @@ class DLab_Admin_Orders {
         exit;
     }
 
+    private function handle_set_status() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $order_id = (int) $_POST['order_id'];
+        $nonce    = sanitize_text_field(wp_unslash($_POST['_wpnonce']));
+        if (!wp_verify_nonce($nonce, 'dlab_admin_set_status_' . $order_id)) {
+            wp_safe_redirect(add_query_arg('dlab_msg', 'status_error', admin_url('admin.php?page=' . self::PAGE_SLUG)));
+            exit;
+        }
+
+        $status = sanitize_key(wp_unslash($_POST['status']));
+        $result = DLab_Checkout::admin_set_status($order_id, $status);
+
+        $redirect = admin_url('admin.php?page=' . self::PAGE_SLUG);
+        $filter   = isset($_POST['status_filter']) ? sanitize_key(wp_unslash($_POST['status_filter'])) : '';
+        $paged    = isset($_POST['paged']) ? max(1, (int) $_POST['paged']) : 1;
+        if ($filter !== '') {
+            $redirect = add_query_arg('status', $filter, $redirect);
+        }
+        if ($paged > 1) {
+            $redirect = add_query_arg('paged', $paged, $redirect);
+        }
+
+        if ($result === 'unchanged') {
+            $redirect = add_query_arg('dlab_msg', 'status_unchanged', $redirect);
+        } elseif (is_wp_error($result)) {
+            $redirect = add_query_arg('dlab_msg', 'status_error', $redirect);
+        } elseif ($status === 'paid') {
+            $redirect = add_query_arg('dlab_msg', 'payment_confirmed', $redirect);
+        } elseif ($status === 'cancelled') {
+            $redirect = add_query_arg('dlab_msg', 'order_cancelled', $redirect);
+        } else {
+            $redirect = add_query_arg('dlab_msg', 'status_updated', $redirect);
+        }
+
+        wp_safe_redirect($redirect);
+        exit;
+    }
+
     public function render_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -89,7 +135,9 @@ class DLab_Admin_Orders {
             $table  = $wpdb->prefix . 'dlab_orders';
             $where  = '1=1';
             $params = array();
-            if ($status_filter !== '') {
+            if ($status_filter === 'awaiting_payment') {
+                $where .= " AND status IN ('awaiting_payment', 'pending')";
+            } elseif ($status_filter !== '') {
                 $where   .= ' AND status = %s';
                 $params[] = $status_filter;
             }
@@ -110,7 +158,6 @@ class DLab_Admin_Orders {
             }
         }
 
-        $actionable_statuses = self::actionable_statuses();
         include DLAB_PLUGIN_DIR . 'admin/partials/orders-page.php';
     }
 }

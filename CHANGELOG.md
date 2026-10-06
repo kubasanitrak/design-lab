@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.11]
+
+- Pass widget stays expanded (icon hidden, larger type). Workshop detail repeats “Zpět na Design Lab”. Admin can set reservation status; Zaplaceno e-mails a confirmation recap to the customer and the Design Lab notification address.
+
 ## [0.6.10]
 
 - Empty-pass “Vybrat workshopy” ghost button; listing links scroll to `#workshops`; grid cards show date only.
