@@ -78,8 +78,8 @@ $login_url    = isset($login_url) ? $login_url : DLab_Settings::login_url(DLab_S
                         </ul>
 
                         <div class="dlab-pass__row dlab-pass-line">
-                            <p class="plain"><span><?php esc_html_e('Počet účastníků', 'design-lab'); ?></span></p>
-                            <p class="plain"><span><?php echo esc_html((string) $spots); ?></span></p>
+                            <h5 class=""><span><?php esc_html_e('Počet účastníků', 'design-lab'); ?></span></h5>
+                            <h5 class=""><span><?php echo esc_html((string) $spots); ?></span></h5>
                         </div>
                         <?php if ($pass_applied && (float) $summary['discount'] > 0) : ?>
                             <div class="dlab-pass__row dlab-pass__row--discount">

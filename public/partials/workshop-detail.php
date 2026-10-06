@@ -275,7 +275,7 @@ $body = preg_replace('/\[dlab_workshop_detail[^\]]*\]/', '', $body);
     <!-- </div> -->
 </div>
 
-<div data-theme="DD-beige" class="section section-full-width section-content--dilna section-padded">
+<div data-theme="DD-white" class="section section-full-width section-content--dilna section-padded">
     <div class="custom-columns">
         <div class="custom-columns--item custom-columns--item_major pad-B-0">
             <a href="<?php echo esc_url($listing_url); ?>" class="back-to-parent h5">
