@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.13]
+
+- Pass unit prices by workshop count (3–4 × 883 Kč, 5–7 × 860 Kč, 8–13 × 831 Kč, 14+ × 800 Kč); pass discount from 3 workshops.
+
 ## [0.6.12]
 
 - Attendee hint on the reservation form is editable under Právní texty.
