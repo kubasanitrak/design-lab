@@ -178,11 +178,11 @@ class DLab_Workshop {
     }
 
     public static function get_pass_price_label($post_id) {
-        $price = self::get_pass_price($post_id);
-        if ($price === null) {
+        if (!class_exists('DLab_Pricing')) {
             return '';
         }
-        return self::format_price($price);
+        unset($post_id);
+        return self::format_price(DLab_Pricing::lowest_unit_price());
     }
 
     public static function get_short_info($post_id) {

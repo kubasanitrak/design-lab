@@ -48,7 +48,7 @@ class DLab_Settings {
 
     public static function defaults() {
         return array(
-            self::OPT_PASS_MIN_WORKSHOPS    => 2,
+            self::OPT_PASS_MIN_WORKSHOPS    => 3,
             self::OPT_PASS_SHARED_HEADCOUNT => 1,
             self::OPT_CURRENCY_CODE         => 'CZK',
             self::OPT_CURRENCY_SYMBOL       => 'Kč',
@@ -90,8 +90,9 @@ class DLab_Settings {
      * Minimum unique workshops in the basket for Design Lab pass pricing.
      */
     public static function pass_min_workshops() {
-        $min = (int) get_option(self::OPT_PASS_MIN_WORKSHOPS, 2);
-        return max(2, (int) apply_filters('dlab_pass_min_workshops', $min));
+        $min   = (int) get_option(self::OPT_PASS_MIN_WORKSHOPS, 3);
+        $floor = class_exists('DLab_Pricing') ? DLab_Pricing::tier_floor() : 3;
+        return max($floor, (int) apply_filters('dlab_pass_min_workshops', $min));
     }
 
     /**

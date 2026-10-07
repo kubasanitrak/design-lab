@@ -93,7 +93,7 @@
             "min": 0,
             "step": 1,
             "append": "Kč",
-            "instructions": "Informativní na kartě. Konečná cena se spočítá v pokladně, pokud je v košíku 2 a více workshopů. Jeden počet účastníků platí pro celý pass."
+            "instructions": "Na webu se nezobrazuje. Cena passu se počítá podle počtu workshopů: 3–4 × 883 Kč, 5–7 × 860 Kč, 8–13 × 831 Kč, 14 a více × 800 Kč za 3hodinový workshop."
         },
         {
             "key": "field_dlab_capacity_regular",

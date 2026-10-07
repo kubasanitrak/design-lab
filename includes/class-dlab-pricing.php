@@ -10,6 +10,54 @@ if (!defined('ABSPATH')) {
 class DLab_Pricing {
 
     /**
+     * Unit price (Kč) for one 3-hour workshop, by minimum workshops in the pass.
+     * Counts between steps keep the previous rate (4 → 883, 6–7 → 860, 9–13 → 831).
+     *
+     * @return array<int,int>
+     */
+    public static function pass_unit_tiers() {
+        return array(
+            3  => 883,
+            5  => 860,
+            8  => 831,
+            14 => 800,
+        );
+    }
+
+    /**
+     * Lowest pass rate (full season). Shown as “od …”.
+     */
+    public static function lowest_unit_price() {
+        $tiers = self::pass_unit_tiers();
+        return (float) min($tiers);
+    }
+
+    /**
+     * Workshops required before any pass rate applies.
+     */
+    public static function tier_floor() {
+        $tiers = self::pass_unit_tiers();
+        return (int) min(array_keys($tiers));
+    }
+
+    /**
+     * Pass unit for this workshop count, or null when the pass rate does not apply.
+     *
+     * @param int $workshop_count
+     * @return float|null
+     */
+    public static function unit_for_count($workshop_count) {
+        $workshop_count = (int) $workshop_count;
+        $unit           = null;
+        foreach (self::pass_unit_tiers() as $min => $price) {
+            if ($workshop_count >= (int) $min) {
+                $unit = (float) $price;
+            }
+        }
+        return $unit;
+    }
+
+    /**
      * @param object[] $items Basket rows with object_id + line_meta
      * @param int      $spots Shared attendee headcount
      * @return array{
@@ -25,13 +73,14 @@ class DLab_Pricing {
      * }
      */
     public static function calculate_pass(array $items, $spots) {
-        $spots           = max(1, (int) $spots);
-        $workshop_count  = count($items);
-        $pass_min        = DLab_Settings::pass_min_workshops();
-        $pass_applied    = $workshop_count >= $pass_min;
-        $lines           = array();
-        $list_total      = 0.0;
-        $pass_total      = 0.0;
+        $spots          = max(1, (int) $spots);
+        $workshop_count = count($items);
+        $pass_min       = max(DLab_Settings::pass_min_workshops(), self::tier_floor());
+        $tier_unit      = self::unit_for_count($workshop_count);
+        $pass_applied   = $tier_unit !== null && $workshop_count >= $pass_min;
+        $lines          = array();
+        $list_total     = 0.0;
+        $pass_total     = 0.0;
 
         foreach ($items as $item) {
             $post_id = is_object($item) ? (int) $item->object_id : (int) $item;
@@ -40,11 +89,10 @@ class DLab_Pricing {
                 : array();
 
             $list_unit = (float) (DLab_Workshop::get_price_per_person($post_id) ?? 0);
-            $pass_unit = DLab_Workshop::get_pass_price($post_id);
-            if ($pass_unit === null) {
-                $pass_unit = $list_unit;
+            if ($pass_applied && $list_unit > 0) {
+                $pass_unit = min($list_unit, (float) $tier_unit);
             } else {
-                $pass_unit = (float) $pass_unit;
+                $pass_unit = $list_unit;
             }
 
             $services   = self::services_addon_total($post_id, $meta['services'] ?? array(), $spots);

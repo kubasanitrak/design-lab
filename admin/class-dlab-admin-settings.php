@@ -42,8 +42,8 @@ class DLab_Admin_Settings {
                             <label for="dlab_pass_min_workshops"><?php esc_html_e('Pass — minimum workshopů', 'design-lab'); ?></label>
                         </th>
                         <td>
-                            <input type="number" min="2" step="1" class="small-text" id="dlab_pass_min_workshops" name="<?php echo esc_attr(DLab_Settings::OPT_PASS_MIN_WORKSHOPS); ?>" value="<?php echo esc_attr((string) DLab_Settings::pass_min_workshops()); ?>">
-                            <p class="description"><?php esc_html_e('Sleva Design Lab pass se uplatní od tohoto počtu různých workshopů v košíku (výchozí 2).', 'design-lab'); ?></p>
+                            <input type="number" min="<?php echo esc_attr((string) DLab_Pricing::tier_floor()); ?>" step="1" class="small-text" id="dlab_pass_min_workshops" name="<?php echo esc_attr(DLab_Settings::OPT_PASS_MIN_WORKSHOPS); ?>" value="<?php echo esc_attr((string) DLab_Settings::pass_min_workshops()); ?>">
+                            <p class="description"><?php esc_html_e('Sleva Design Lab pass se uplatní od tohoto počtu různých workshopů. Sazba za 3hodinový workshop: 3–4 × 883 Kč, 5–7 × 860 Kč, 8–13 × 831 Kč, 14 a více × 800 Kč.', 'design-lab'); ?></p>
                         </td>
                     </tr>
                     <tr>
